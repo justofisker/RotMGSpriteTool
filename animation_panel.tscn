@@ -1,20 +1,22 @@
-[gd_scene load_steps=3 format=3 uid="uid://c8xoealrtv7p4"]
+[gd_scene load_steps=4 format=3 uid="uid://c8xoealrtv7p4"]
 
 [ext_resource type="Script" path="res://animation_panel.gd" id="1_t6lh1"]
+[ext_resource type="Material" uid="uid://du4id8y1i8pqb" path="res://outline_preview_material.tres" id="2_xiiqb"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_lvg2c"]
 font_size = 32
 
-[node name="AnimationPanel" type="Panel" node_paths=PackedStringArray("anim_sprite", "animation_selector", "label", "png_dialog", "gif_dialog", "gif_button", "png_button")]
+[node name="AnimationPanel" type="Panel" node_paths=PackedStringArray("anim_sprite", "animation_selector", "label", "png_dialog", "gif_dialog", "gif_button", "png_button", "sprite_control")]
 custom_minimum_size = Vector2(400, 0)
 script = ExtResource("1_t6lh1")
-anim_sprite = NodePath("MarginContainer/VBoxContainer/Control/Sprite2D")
+anim_sprite = NodePath("MarginContainer/VBoxContainer/SpriteControl/Sprite2D")
 animation_selector = NodePath("MarginContainer/VBoxContainer/AnimationSelector")
 label = NodePath("MarginContainer/VBoxContainer/Label")
 png_dialog = NodePath("SavePngDialog")
 gif_dialog = NodePath("SaveGifDialog")
 gif_button = NodePath("MarginContainer/VBoxContainer/HBoxContainer/GifExportButton")
 png_button = NodePath("MarginContainer/VBoxContainer/HBoxContainer/PngExportButton")
+sprite_control = NodePath("MarginContainer/VBoxContainer/SpriteControl")
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
 layout_mode = 1
@@ -38,15 +40,17 @@ label_settings = SubResource("LabelSettings_lvg2c")
 horizontal_alignment = 1
 autowrap_mode = 3
 
-[node name="Control" type="Control" parent="MarginContainer/VBoxContainer"]
+[node name="SpriteControl" type="Control" parent="MarginContainer/VBoxContainer"]
 custom_minimum_size = Vector2(0, 200)
 layout_mode = 2
+size_flags_horizontal = 4
 
-[node name="Sprite2D" type="AnimatedSprite2D" parent="MarginContainer/VBoxContainer/Control"]
+[node name="Sprite2D" type="AnimatedSprite2D" parent="MarginContainer/VBoxContainer/SpriteControl"]
 texture_filter = 1
-position = Vector2(200, 100)
+material = ExtResource("2_xiiqb")
 scale = Vector2(5, 5)
 speed_scale = 0.2
+centered = false
 
 [node name="AnimationSelector" type="OptionButton" parent="MarginContainer/VBoxContainer"]
 layout_mode = 2
@@ -71,7 +75,7 @@ layout_mode = 2
 layout_mode = 2
 text = "Export Scale"
 
-[node name="SpinBox" type="SpinBox" parent="MarginContainer/VBoxContainer/HBoxContainer/HBoxContainer"]
+[node name="ScaleSpin" type="SpinBox" parent="MarginContainer/VBoxContainer/HBoxContainer/HBoxContainer"]
 layout_mode = 2
 min_value = 1.0
 max_value = 10.0
@@ -84,11 +88,23 @@ layout_mode = 2
 layout_mode = 2
 text = "Outline Size"
 
-[node name="SpinBox" type="SpinBox" parent="MarginContainer/VBoxContainer/HBoxContainer/HBoxContainer2"]
+[node name="OutlineSpin" type="SpinBox" parent="MarginContainer/VBoxContainer/HBoxContainer/HBoxContainer2"]
 layout_mode = 2
 min_value = 1.0
 max_value = 10.0
 value = 1.0
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/HBoxContainer/HBoxContainer3"]
+layout_mode = 2
+text = "Outline Color"
+
+[node name="OutlineColor" type="ColorPickerButton" parent="MarginContainer/VBoxContainer/HBoxContainer/HBoxContainer3"]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+edit_alpha = false
 
 [node name="SavePngDialog" type="NativeFileDialog" parent="."]
 
@@ -97,5 +113,8 @@ value = 1.0
 [connection signal="item_selected" from="MarginContainer/VBoxContainer/AnimationSelector" to="." method="_on_animation_selector_item_selected"]
 [connection signal="pressed" from="MarginContainer/VBoxContainer/HBoxContainer/GifExportButton" to="." method="_on_gif_export_button_pressed"]
 [connection signal="pressed" from="MarginContainer/VBoxContainer/HBoxContainer/PngExportButton" to="." method="_on_png_export_button_pressed"]
+[connection signal="value_changed" from="MarginContainer/VBoxContainer/HBoxContainer/HBoxContainer/ScaleSpin" to="." method="_on_scale_spin_value_changed"]
+[connection signal="value_changed" from="MarginContainer/VBoxContainer/HBoxContainer/HBoxContainer2/OutlineSpin" to="." method="_on_outline_spin_value_changed"]
+[connection signal="color_changed" from="MarginContainer/VBoxContainer/HBoxContainer/HBoxContainer3/OutlineColor" to="." method="_on_outline_color_color_changed"]
 [connection signal="file_selected" from="SavePngDialog" to="." method="_on_save_png_dialog_file_selected"]
 [connection signal="file_selected" from="SaveGifDialog" to="." method="_on_save_gif_dialog_file_selected"]

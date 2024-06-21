@@ -24,9 +24,14 @@ func _ready() -> void:
 					continue
 				var texrect = TextureRect.new()
 				texrect.texture = c.texture.texture
+				texrect.texture.region.position.x -= 1
+				texrect.texture.region.position.y -= 1
+				texrect.texture.region.size.x += 2
+				texrect.texture.region.size.y += 2
 				texrect.custom_minimum_size = texrect.texture.get_size() * 5
 				texrect.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT
 				texrect.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+				texrect.material = preload("res://outline_material.tres")
 				panel.vbox.add_child(texrect)
 				panel.vbox.move_child(texrect, 0)
 				container.add_child(panel)
@@ -35,9 +40,14 @@ func _ready() -> void:
 				anim_sprite.scale = Vector2(5, 5)
 				anim_sprite.centered = false
 				anim_sprite.play("default")
+				anim_sprite.material = preload("res://outline_material.tres")
 				var control := Control.new()
 				for idx in anim_sprite.sprite_frames.get_frame_count("default"):
-					var tex := anim_sprite.sprite_frames.get_frame_texture("default", idx)
+					var tex : AtlasTexture = anim_sprite.sprite_frames.get_frame_texture("default", idx)
+					tex.region.position.x -= 1
+					tex.region.position.y -= 1
+					tex.region.size.x += 2
+					tex.region.size.y += 2
 					control.custom_minimum_size.x = maxf(control.custom_minimum_size.x, tex.get_width())
 					control.custom_minimum_size.y = maxf(control.custom_minimum_size.y, tex.get_height())
 				control.custom_minimum_size *= 5.0
