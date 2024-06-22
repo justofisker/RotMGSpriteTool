@@ -17,7 +17,7 @@ config/icon="res://icon.svg"
 
 [autoload]
 
-RotmgAtlases="*res://parsers/rotmg_atlases.gd"
+RotmgAtlases="*res://rotmg_atlases_dll.gd"
 
 [editor_plugins]
 

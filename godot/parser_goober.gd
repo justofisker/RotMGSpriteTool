@@ -6,12 +6,13 @@ const ObjectParser = preload("res://parsers/objects/object_parser.gd")
 
 func _ready() -> void:
 	var parser := ObjectParser.new()
-	var characters := parser.parse_objects("res://assets/xml/theShattersObjects.xml")
+	#var characters := parser.parse_objects("res://assets/xml/theShattersObjects.xml")
+	var characters := parser.parse_objects("res://assets/xml/heroes.xml")
+	#var characters := parser.parse_objects("res://assets/xml/oryxSanctuaryObjects.xml")
 	#var characters := parser.parse_objects("res://assets/xml/abyssOfDemonsObjects.xml")
 	#var characters := parser.parse_objects("res://assets/xml/moonlightVillageObjects.xml")
 	
 	get_tree().get_first_node_in_group("animation_panel") .characters = characters
-	
 	for c in characters:
 		if c.texture != null:
 			var panel := preload("res://sprite_panel.tscn").instantiate()
