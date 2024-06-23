@@ -29,7 +29,11 @@ static func parse(p: SimpleXmlParser) -> TextureXml:
 					t.file_name = p.get_node_data()
 				"Index":
 					p.read_whitespace()
-					t.index = p.get_node_data_as_hex()
+					var index_string := p.get_node_data()
+					if index_string.begins_with("0x"):
+						t.index = p.get_node_data_as_hex()
+					else:
+						t.index = p.get_node_data_as_int()
 			p.skip_section()
 		p.read()
 	
