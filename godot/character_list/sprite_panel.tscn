@@ -1,0 +1,57 @@
+[gd_scene load_steps=5 format=3 uid="uid://dmr1ek15issb"]
+
+[ext_resource type="Script" path="res://character_list/sprite_panel.gd" id="1_cu1gw"]
+[ext_resource type="Script" path="res://sidebar/animated_sprite_container.gd" id="2_arh7w"]
+[ext_resource type="Material" uid="uid://bud36ywkxwv5b" path="res://character_list/outline_material.tres" id="3_siakx"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_ymw84"]
+
+[node name="SpritePanel" type="PanelContainer" node_paths=PackedStringArray("label", "vbox", "sprite")]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = -780.0
+offset_bottom = -380.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+script = ExtResource("1_cu1gw")
+label = NodePath("MarginContainer/VBoxContainer/Label")
+vbox = NodePath("MarginContainer/VBoxContainer")
+sprite = NodePath("MarginContainer/VBoxContainer/SpriteContainer/AnimatedSprite2D")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+
+[node name="SpriteContainer" type="Control" parent="MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 100)
+layout_mode = 2
+size_flags_horizontal = 4
+script = ExtResource("2_arh7w")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="MarginContainer/VBoxContainer/SpriteContainer"]
+material = ExtResource("3_siakx")
+position = Vector2(0.155, 0.37)
+scale = Vector2(5, 5)
+sprite_frames = SubResource("SpriteFrames_ymw84")
+centered = false
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 10
+text = "Title"
+horizontal_alignment = 1
+
+[node name="Button" type="Button" parent="."]
+layout_mode = 2
+flat = true
+
+[connection signal="pressed" from="Button" to="." method="_on_button_pressed"]

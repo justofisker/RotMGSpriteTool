@@ -84,18 +84,16 @@ impl SpriteSheetDeserializer {
     }
 
     #[func]
-    fn get_animated_sprite(&self, sprite_sheet: String, index: u16) -> Gd<AnimatedSprite2D> {
-        let mut anim_sprite = AnimatedSprite2D::new_alloc();
-        let mut frames = SpriteFrames::new_gd();
-        anim_sprite.set_sprite_frames(frames.clone());
+    fn get_animated_sprite_textures(&self, sprite_sheet: String, index: u16) -> VariantArray {
+        let mut array = VariantArray::new();
 
         for sprite in &self.animated_sprites {
             if sprite.sprite_sheet_name.eq_ignore_ascii_case(&sprite_sheet) && sprite.index == index {
-                frames.add_frame("default".into(), self.get_atlas_texture(sprite.sprite.a_id, &sprite.sprite.position).upcast());
+                array.push(self.get_atlas_texture(sprite.sprite.a_id, &sprite.sprite.position).to_variant());
             }
         }
 
-        return anim_sprite;
+        return array;
     }
 
     #[func]

@@ -11,7 +11,7 @@ static func parse(p: SimpleXmlParser) -> CharacterAnimation:
 	var a := CharacterAnimation.new()
 	a.id = p.get_attribute_value("id")
 	if a.id == "":
-		a.id = "default"
+		a.id = ""
 	a.prob = p.get_attribute_value("prob").to_float()
 	a.period = p.get_attribute_value("period").to_int()
 	var offset := p.get_node_offset()

@@ -1,9 +1,11 @@
-[gd_scene load_steps=7 format=3 uid="uid://bi1k4fpl3qytt"]
+[gd_scene load_steps=9 format=3 uid="uid://bi1k4fpl3qytt"]
 
-[ext_resource type="Script" path="res://parser_goober.gd" id="1_jujgo"]
 [ext_resource type="Script" path="res://addons/SmoothScroll/SmoothScrollContainer.gd" id="2_x8vvr"]
+[ext_resource type="Script" path="res://character_list/character_list.gd" id="3_37r0p"]
 [ext_resource type="Script" path="res://addons/SmoothScroll/scroll_damper/expo_scroll_damper.gd" id="3_o08e4"]
-[ext_resource type="PackedScene" uid="uid://c8xoealrtv7p4" path="res://animation_panel.tscn" id="4_rbgug"]
+[ext_resource type="Script" path="res://character_list/character_list_populator.gd" id="4_7rkx3"]
+[ext_resource type="PackedScene" uid="uid://c8xoealrtv7p4" path="res://sidebar/sidebar.tscn" id="4_rbgug"]
+[ext_resource type="PackedScene" uid="uid://dmr1ek15issb" path="res://character_list/sprite_panel.tscn" id="5_2gion"]
 
 [sub_resource type="Resource" id="Resource_6f7kp"]
 script = ExtResource("3_o08e4")
@@ -25,10 +27,6 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="ParserGoober" type="Node" parent="." node_paths=PackedStringArray("container")]
-script = ExtResource("1_jujgo")
-container = NodePath("../VBoxContainer/SmoothScrollContainer/SpriteContainer")
-
 [node name="VBoxContainer" type="HBoxContainer" parent="."]
 layout_mode = 1
 anchors_preset = 15
@@ -44,10 +42,15 @@ script = ExtResource("2_x8vvr")
 wheel_scroll_damper = SubResource("Resource_6f7kp")
 dragging_scroll_damper = SubResource("Resource_j2dyl")
 
-[node name="SpriteContainer" type="HFlowContainer" parent="VBoxContainer/SmoothScrollContainer"]
+[node name="CharacterList" type="HFlowContainer" parent="VBoxContainer/SmoothScrollContainer"]
 texture_filter = 1
 layout_mode = 2
 size_flags_horizontal = 3
+script = ExtResource("3_37r0p")
 
-[node name="AnimationPanel" parent="VBoxContainer" groups=["animation_panel"] instance=ExtResource("4_rbgug")]
+[node name="CharacterListPopulator" type="Node" parent="VBoxContainer/SmoothScrollContainer/CharacterList"]
+script = ExtResource("4_7rkx3")
+sprite_panel = ExtResource("5_2gion")
+
+[node name="SideBar" parent="VBoxContainer" instance=ExtResource("4_rbgug")]
 layout_mode = 2

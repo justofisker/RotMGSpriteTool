@@ -1,0 +1,43 @@
+[gd_scene load_steps=5 format=3 uid="uid://di3w2cukl2ajp"]
+
+[ext_resource type="Script" path="res://sidebar/animated_sprite_container.gd" id="1_8p4l2"]
+[ext_resource type="Script" path="res://sidebar/alt_textures.gd" id="1_a6krb"]
+[ext_resource type="Material" uid="uid://bud36ywkxwv5b" path="res://character_list/outline_material.tres" id="2_22nux"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_6nouk"]
+
+[node name="AltTextures" type="VBoxContainer"]
+offset_right = 349.0
+offset_bottom = 470.0
+script = ExtResource("1_a6krb")
+
+[node name="AltTexturesLabel" type="Label" parent="."]
+layout_mode = 2
+mouse_filter = 1
+text = "Alt Texture(s)"
+horizontal_alignment = 1
+
+[node name="AltTextureControl" type="Control" parent="."]
+layout_mode = 2
+mouse_filter = 1
+script = ExtResource("1_8p4l2")
+
+[node name="Sprite2D" type="AnimatedSprite2D" parent="AltTextureControl"]
+texture_filter = 1
+material = ExtResource("2_22nux")
+scale = Vector2(5, 5)
+sprite_frames = SubResource("SpriteFrames_6nouk")
+centered = false
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="HBoxContainer2"]
+layout_mode = 2
+mouse_filter = 1
+text = "Current Alt Texture:"
+
+[node name="AltTexSpin" type="SpinBox" parent="HBoxContainer2"]
+layout_mode = 2
+mouse_filter = 1
+max_value = 0.0
