@@ -11,6 +11,9 @@ func _on_pressed() -> void:
 	dialog.show()
 
 func _on_dialog_file_selected(path: String) -> void:
+	var dir := path.substr(0, path.rfind("/") + 1)
+	dialog.root_subfolder = dir
+	
 	var sprite_frames = sprite.sprite_frames
 	var animation = sprite.animation
 	
@@ -37,6 +40,9 @@ func _on_dialog_file_selected(path: String) -> void:
 	await RenderingServer.frame_post_draw
 	
 	path = path.trim_suffix(".png")
-	path = path.trim_suffix("_0")
-	for idx in viewports.size():
-		viewports[idx].get_texture().get_image().save_png("%s_%d.png" % [path, idx])
+	if viewports.size() == 1:
+		viewports[0].get_texture().get_image().save_png("%s.png" % path)
+	else:
+		path = path.trim_suffix("_0")
+		for idx in viewports.size():
+			viewports[idx].get_texture().get_image().save_png("%s_%d.png" % [path, idx])

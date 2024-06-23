@@ -10,6 +10,9 @@ func _on_pressed() -> void:
 	dialog.show()
 
 func _on_native_file_dialog_file_selected(path: String) -> void:
+	var dir := path.substr(0, path.rfind("/") + 1)
+	dialog.root_subfolder = dir
+	
 	if !path.ends_with(".gif"):
 		path += ".gif"
 	var sprite_frames : SpriteFrames = %Sprite.sprite_frames
@@ -26,7 +29,7 @@ func _on_native_file_dialog_file_selected(path: String) -> void:
 	
 	for idx in sprite_frames.get_frame_count(animation):
 		var viewport := SubViewport.new()
-		viewport.size = extents * %ExportOptions.export_scale
+		viewport.size = extents * GlobalSettings.export_scale
 		viewport.disable_3d = true
 		viewport.transparent_bg = true
 		viewport.render_target_clear_mode = SubViewport.CLEAR_MODE_ONCE
@@ -35,7 +38,7 @@ func _on_native_file_dialog_file_selected(path: String) -> void:
 		viewport.add_child(camera)
 		var sprite := Sprite2D.new()
 		sprite.texture = sprite_frames.get_frame_texture(animation, idx).duplicate()
-		sprite.scale = Vector2(%ExportOptions.export_scale, %ExportOptions.export_scale)
+		sprite.scale = Vector2(GlobalSettings.export_scale, GlobalSettings.export_scale)
 		sprite.material = %Sprite.material.duplicate()
 		sprite.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 		viewport.add_child(sprite)
