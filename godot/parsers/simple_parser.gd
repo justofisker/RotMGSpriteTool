@@ -30,7 +30,7 @@ func get_attribute_value(name: String) -> String:
 	for idx in parser.get_attribute_count():
 		if parser.get_attribute_name(idx) == name:
 			return parser.get_attribute_value(idx)
-	#push_warning("Couldn't find attribute with name: ", name)
+	push_warning("Couldn't find attribute with name: ", name)
 	return ""
 
 func get_node_data_as_int() -> int:
@@ -52,16 +52,27 @@ func is_element_end() -> bool:
 	return parser.get_node_type() == XMLParser.NODE_ELEMENT_END
 
 # Reads
-
 func read() -> void:
-	assert(parser.read() != ERR_FILE_EOF)
+	var err := parser.read()
+	if err != OK:
+		push_error("Error while attempting to parse: ", error_string(err))
+		return
 	while !(parser.get_node_type() == XMLParser.NODE_ELEMENT || parser.get_node_type() == XMLParser.NODE_ELEMENT_END):
-		assert(parser.read() != ERR_FILE_EOF)
+		err = parser.read()
+		if err != OK:
+			push_error("Error while attempting to parse: ", error_string(err))
+			return
 
 func read_whitespace() -> void:
-	assert(parser.read() != ERR_FILE_EOF)
+	var err := parser.read()
+	if err != OK:
+		push_error("Error while attempting to parse: ", error_string(err))
+		return
 	while !(parser.get_node_type() == XMLParser.NODE_ELEMENT || parser.get_node_type() == XMLParser.NODE_ELEMENT_END || parser.get_node_type() == XMLParser.NODE_TEXT):
-		assert(parser.read() != ERR_FILE_EOF)
+		err = parser.read()
+		if err != OK:
+			push_error("Error while attempting to parse: ", error_string(err))
+			return
 
 func read_possible_end() -> bool:
 	if parser.read() == ERR_FILE_EOF:

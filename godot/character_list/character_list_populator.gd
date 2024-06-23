@@ -6,6 +6,10 @@ extends Node
 const ObjectParser = preload("res://parsers/objects/object_parser.gd")
 
 func _ready() -> void:
+	if DirAccess.dir_exists_absolute("./assets/xml/"):
+		xml_selector.root_subfolder = "./assets/xml/"
+	else:
+		xml_selector.root_subfolder = "./"
 	xml_selector.add_filter("*.xml", "RotMG Object XML (*.xml)")
 	xml_selector.show()
 
