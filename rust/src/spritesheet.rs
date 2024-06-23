@@ -1,7 +1,7 @@
 use std::ops::Deref;
 
 use godot::classes::{AnimatedSprite2D, INode, Node};
-use godot::engine::{AtlasTexture, FileAccess, SpriteFrames, Texture2D};
+use godot::engine::{AtlasTexture, FileAccess, Image, ImageTexture, SpriteFrames, Texture2D};
 use godot::prelude::*;
 
 extern crate flatbuffers;
@@ -38,9 +38,29 @@ impl INode for SpriteSheetDeserializer {
     }
 
     fn ready(&mut self) {
-        self.map_objects = load("res://assets/atlases/mapObjects.png");
-        self.ground_tiles = load("res://assets/atlases/groundTiles.png");
-        self.characters = load("res://assets/atlases/characters.png");
+        const MAP_OBJECT_PATH : &str = "res://assets/atlases/mapObjects.png";
+        const GROUND_TILES_PATH : &str = "res://assets/atlases/groundTiles.png";
+        const CHARACTERS_PATH : &str = "res://assets/atlases/characters.png";
+
+        //self.map_objects = load(MAP_OBJECT_PATH);
+        //self.ground_tiles = load(GROUND_TILES_PATH);
+        //self.characters = load(CHARACTERS_PATH);
+
+        if FileAccess::file_exists(MAP_OBJECT_PATH.into()) {
+            let mut img = Image::new_gd();
+            img.load(MAP_OBJECT_PATH.into());
+            self.map_objects = ImageTexture::create_from_image(img).unwrap().upcast();
+        }
+        if FileAccess::file_exists(GROUND_TILES_PATH.into()) {
+            let mut img = Image::new_gd();
+            img.load(GROUND_TILES_PATH.into());
+            self.ground_tiles = ImageTexture::create_from_image(img).unwrap().upcast();
+        }
+        if FileAccess::file_exists(CHARACTERS_PATH.into()) {
+            let mut img = Image::new_gd();
+            img.load(CHARACTERS_PATH.into());
+            self.characters = ImageTexture::create_from_image(img).unwrap().upcast();
+        }
 
         let spritesheef_path = "res://assets/atlases/spritesheetf";
 

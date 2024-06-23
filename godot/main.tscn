@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://bi1k4fpl3qytt"]
+[gd_scene load_steps=10 format=3 uid="uid://bi1k4fpl3qytt"]
 
 [ext_resource type="Script" path="res://addons/SmoothScroll/SmoothScrollContainer.gd" id="2_x8vvr"]
 [ext_resource type="Script" path="res://character_list/character_list.gd" id="3_37r0p"]
@@ -6,6 +6,7 @@
 [ext_resource type="Script" path="res://character_list/character_list_populator.gd" id="4_7rkx3"]
 [ext_resource type="PackedScene" uid="uid://c8xoealrtv7p4" path="res://sidebar/sidebar.tscn" id="4_rbgug"]
 [ext_resource type="PackedScene" uid="uid://dmr1ek15issb" path="res://character_list/sprite_panel.tscn" id="5_2gion"]
+[ext_resource type="Script" path="res://open_diff_xml.gd" id="7_rgnh1"]
 
 [sub_resource type="Resource" id="Resource_6f7kp"]
 script = ExtResource("3_o08e4")
@@ -19,7 +20,7 @@ friction = 4.0
 minimum_velocity = 0.4
 rebound_strength = 7.0
 
-[node name="Control" type="Control"]
+[node name="Main" type="Control"]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -48,9 +49,26 @@ layout_mode = 2
 size_flags_horizontal = 3
 script = ExtResource("3_37r0p")
 
-[node name="CharacterListPopulator" type="Node" parent="VBoxContainer/SmoothScrollContainer/CharacterList"]
+[node name="CharacterListPopulator" type="Node" parent="VBoxContainer/SmoothScrollContainer/CharacterList" node_paths=PackedStringArray("xml_selector")]
 script = ExtResource("4_7rkx3")
 sprite_panel = ExtResource("5_2gion")
+xml_selector = NodePath("NativeFileDialog")
+
+[node name="NativeFileDialog" type="NativeFileDialog" parent="VBoxContainer/SmoothScrollContainer/CharacterList/CharacterListPopulator"]
+title = "Open a File"
+file_mode = 0
+root_subfolder = "./assets/xml/"
 
 [node name="SideBar" parent="VBoxContainer" instance=ExtResource("4_rbgug")]
 layout_mode = 2
+
+[node name="Button" type="Button" parent="."]
+layout_mode = 1
+offset_right = 170.0
+offset_bottom = 31.0
+size_flags_horizontal = 8
+size_flags_vertical = 0
+text = "Choose Different File"
+script = ExtResource("7_rgnh1")
+
+[connection signal="file_selected" from="VBoxContainer/SmoothScrollContainer/CharacterList/CharacterListPopulator/NativeFileDialog" to="VBoxContainer/SmoothScrollContainer/CharacterList/CharacterListPopulator" method="_on_native_file_dialog_file_selected"]

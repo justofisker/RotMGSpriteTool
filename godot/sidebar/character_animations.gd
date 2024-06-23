@@ -1,4 +1,4 @@
-extends VBoxContainer
+extends Control
 
 @export var animation_selector: OptionButton
 
@@ -11,7 +11,8 @@ func _setup_animations() -> void:
 	animation_selector.selected = 0
 	_setup_animation_selector()
 	_add_frames()
-	animation_selector.item_selected.emit(0)
+	if animation_selector.item_count != 0:
+		animation_selector.item_selected.emit(0)
 
 func _setup_animation_selector() -> void:
 	animation_selector.clear()

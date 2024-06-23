@@ -36,7 +36,7 @@ func _reposition_frame() -> void:
 	var frame := sprite.sprite_frames.get_frame_texture(sprite.animation, sprite.frame)
 	if !is_instance_valid(frame):
 		return
-	sprite.position.x = (custom_minimum_size.x - frame.get_width() * sprite.scale.x) / 2.0
+	sprite.position.x = 0
 	sprite.position.y = custom_minimum_size.y - frame.get_height() * sprite.scale.y
 
 func _on_sprite_frames_changed() -> void:
