@@ -1,120 +1,198 @@
-[gd_scene load_steps=4 format=3 uid="uid://c8xoealrtv7p4"]
+[gd_scene load_steps=10 format=3 uid="uid://c8xoealrtv7p4"]
 
 [ext_resource type="Script" path="res://animation_panel.gd" id="1_t6lh1"]
+[ext_resource type="Script" path="res://addons/SmoothScroll/SmoothScrollContainer.gd" id="2_qhpb7"]
 [ext_resource type="Material" uid="uid://du4id8y1i8pqb" path="res://outline_preview_material.tres" id="2_xiiqb"]
+[ext_resource type="Script" path="res://addons/SmoothScroll/scroll_damper/expo_scroll_damper.gd" id="3_ro2ds"]
+[ext_resource type="Material" uid="uid://bud36ywkxwv5b" path="res://outline_material.tres" id="5_vdcxd"]
+
+[sub_resource type="Resource" id="Resource_rn8v4"]
+script = ExtResource("3_ro2ds")
+friction = 4.0
+minimum_velocity = 0.4
+rebound_strength = 7.0
+
+[sub_resource type="Resource" id="Resource_714mu"]
+script = ExtResource("3_ro2ds")
+friction = 4.0
+minimum_velocity = 0.4
+rebound_strength = 7.0
 
 [sub_resource type="LabelSettings" id="LabelSettings_lvg2c"]
 font_size = 32
 
-[node name="AnimationPanel" type="Panel" node_paths=PackedStringArray("anim_sprite", "animation_selector", "label", "png_dialog", "gif_dialog", "gif_button", "png_button", "sprite_control")]
+[sub_resource type="SpriteFrames" id="SpriteFrames_6nouk"]
+
+[node name="AnimationPanel" type="Panel" node_paths=PackedStringArray("anim_sprite", "animation_selector", "label", "png_dialog", "gif_dialog", "gif_button", "png_button", "sprite_control", "scale_spin", "outline_spin", "outline_color", "alt_tex_spin", "alt_tex_sprite", "alt_tex_control")]
 custom_minimum_size = Vector2(400, 0)
+anchors_preset = 9
+anchor_bottom = 1.0
+grow_vertical = 2
 script = ExtResource("1_t6lh1")
-anim_sprite = NodePath("MarginContainer/VBoxContainer/SpriteControl/Sprite2D")
-animation_selector = NodePath("MarginContainer/VBoxContainer/AnimationSelector")
-label = NodePath("MarginContainer/VBoxContainer/Label")
+anim_sprite = NodePath("SmoothScrollContainer/MarginContainer/VBoxContainer/SpriteControl/Sprite2D")
+animation_selector = NodePath("SmoothScrollContainer/MarginContainer/VBoxContainer/AnimationSelector")
+label = NodePath("SmoothScrollContainer/MarginContainer/VBoxContainer/Label")
 png_dialog = NodePath("SavePngDialog")
 gif_dialog = NodePath("SaveGifDialog")
-gif_button = NodePath("MarginContainer/VBoxContainer/HBoxContainer/GifExportButton")
-png_button = NodePath("MarginContainer/VBoxContainer/HBoxContainer/PngExportButton")
-sprite_control = NodePath("MarginContainer/VBoxContainer/SpriteControl")
+gif_button = NodePath("SmoothScrollContainer/MarginContainer/VBoxContainer/HBoxContainer/GifExportButton")
+png_button = NodePath("SmoothScrollContainer/MarginContainer/VBoxContainer/HBoxContainer/PngExportButton")
+sprite_control = NodePath("SmoothScrollContainer/MarginContainer/VBoxContainer/SpriteControl")
+scale_spin = NodePath("SmoothScrollContainer/MarginContainer/VBoxContainer/HBoxContainer/HBoxContainer/ScaleSpin")
+outline_spin = NodePath("SmoothScrollContainer/MarginContainer/VBoxContainer/HBoxContainer/HBoxContainer2/OutlineSpin")
+outline_color = NodePath("SmoothScrollContainer/MarginContainer/VBoxContainer/HBoxContainer/HBoxContainer3/OutlineColor")
+alt_tex_spin = NodePath("SmoothScrollContainer/MarginContainer/VBoxContainer/HBoxContainer2/AltTexSpin")
+alt_tex_sprite = NodePath("SmoothScrollContainer/MarginContainer/VBoxContainer/AltTextureControl/Sprite2D")
+alt_tex_control = NodePath("SmoothScrollContainer/MarginContainer/VBoxContainer/AltTextureControl")
 
-[node name="MarginContainer" type="MarginContainer" parent="."]
+[node name="SmoothScrollContainer" type="ScrollContainer" parent="."]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("2_qhpb7")
+wheel_scroll_damper = SubResource("Resource_rn8v4")
+dragging_scroll_damper = SubResource("Resource_714mu")
+
+[node name="MarginContainer" type="MarginContainer" parent="SmoothScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
 theme_override_constants/margin_left = 8
 theme_override_constants/margin_top = 8
 theme_override_constants/margin_right = 8
 theme_override_constants/margin_bottom = 8
 
-[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="SmoothScrollContainer/MarginContainer"]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="MarginContainer/VBoxContainer"]
+[node name="Label" type="Label" parent="SmoothScrollContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
+mouse_filter = 1
 text = "Current Character"
 label_settings = SubResource("LabelSettings_lvg2c")
 horizontal_alignment = 1
 autowrap_mode = 3
 
-[node name="SpriteControl" type="Control" parent="MarginContainer/VBoxContainer"]
+[node name="SpriteControl" type="Control" parent="SmoothScrollContainer/MarginContainer/VBoxContainer"]
 custom_minimum_size = Vector2(0, 200)
 layout_mode = 2
 size_flags_horizontal = 4
+mouse_filter = 1
 
-[node name="Sprite2D" type="AnimatedSprite2D" parent="MarginContainer/VBoxContainer/SpriteControl"]
+[node name="Sprite2D" type="AnimatedSprite2D" parent="SmoothScrollContainer/MarginContainer/VBoxContainer/SpriteControl"]
 texture_filter = 1
 material = ExtResource("2_xiiqb")
 scale = Vector2(5, 5)
 speed_scale = 0.2
 centered = false
 
-[node name="AnimationSelector" type="OptionButton" parent="MarginContainer/VBoxContainer"]
+[node name="AnimationSelector" type="OptionButton" parent="SmoothScrollContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+mouse_filter = 1
+
+[node name="HBoxContainer" type="HFlowContainer" parent="SmoothScrollContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
 
-[node name="HBoxContainer" type="HFlowContainer" parent="MarginContainer/VBoxContainer"]
-layout_mode = 2
-
-[node name="GifExportButton" type="Button" parent="MarginContainer/VBoxContainer/HBoxContainer"]
+[node name="GifExportButton" type="Button" parent="SmoothScrollContainer/MarginContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 0
+mouse_filter = 1
 text = "Export as GIF"
 
-[node name="PngExportButton" type="Button" parent="MarginContainer/VBoxContainer/HBoxContainer"]
+[node name="PngExportButton" type="Button" parent="SmoothScrollContainer/MarginContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 0
+mouse_filter = 1
 text = "Export Frames as PNGs"
 
-[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/HBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="SmoothScrollContainer/MarginContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/HBoxContainer/HBoxContainer"]
+[node name="Label" type="Label" parent="SmoothScrollContainer/MarginContainer/VBoxContainer/HBoxContainer/HBoxContainer"]
 layout_mode = 2
+mouse_filter = 1
 text = "Export Scale"
 
-[node name="ScaleSpin" type="SpinBox" parent="MarginContainer/VBoxContainer/HBoxContainer/HBoxContainer"]
+[node name="ScaleSpin" type="SpinBox" parent="SmoothScrollContainer/MarginContainer/VBoxContainer/HBoxContainer/HBoxContainer"]
 layout_mode = 2
+mouse_filter = 1
 min_value = 1.0
 max_value = 10.0
 value = 5.0
+suffix = "x"
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="MarginContainer/VBoxContainer/HBoxContainer"]
+[node name="HBoxContainer2" type="HBoxContainer" parent="SmoothScrollContainer/MarginContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/HBoxContainer/HBoxContainer2"]
+[node name="Label" type="Label" parent="SmoothScrollContainer/MarginContainer/VBoxContainer/HBoxContainer/HBoxContainer2"]
 layout_mode = 2
+mouse_filter = 1
 text = "Outline Size"
 
-[node name="OutlineSpin" type="SpinBox" parent="MarginContainer/VBoxContainer/HBoxContainer/HBoxContainer2"]
+[node name="OutlineSpin" type="SpinBox" parent="SmoothScrollContainer/MarginContainer/VBoxContainer/HBoxContainer/HBoxContainer2"]
 layout_mode = 2
+mouse_filter = 1
 min_value = 1.0
 max_value = 10.0
 value = 1.0
+suffix = "px"
 
-[node name="HBoxContainer3" type="HBoxContainer" parent="MarginContainer/VBoxContainer/HBoxContainer"]
+[node name="HBoxContainer3" type="HBoxContainer" parent="SmoothScrollContainer/MarginContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/HBoxContainer/HBoxContainer3"]
+[node name="Label" type="Label" parent="SmoothScrollContainer/MarginContainer/VBoxContainer/HBoxContainer/HBoxContainer3"]
 layout_mode = 2
+mouse_filter = 1
 text = "Outline Color"
 
-[node name="OutlineColor" type="ColorPickerButton" parent="MarginContainer/VBoxContainer/HBoxContainer/HBoxContainer3"]
+[node name="OutlineColor" type="ColorPickerButton" parent="SmoothScrollContainer/MarginContainer/VBoxContainer/HBoxContainer/HBoxContainer3"]
 custom_minimum_size = Vector2(32, 32)
 layout_mode = 2
+mouse_filter = 1
 edit_alpha = false
+
+[node name="AltTexturesLabel" type="Label" parent="SmoothScrollContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+mouse_filter = 1
+text = "Alt Texture(s)"
+horizontal_alignment = 1
+
+[node name="AltTextureControl" type="Control" parent="SmoothScrollContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+mouse_filter = 1
+
+[node name="Sprite2D" type="AnimatedSprite2D" parent="SmoothScrollContainer/MarginContainer/VBoxContainer/AltTextureControl"]
+texture_filter = 1
+material = ExtResource("5_vdcxd")
+scale = Vector2(5, 5)
+sprite_frames = SubResource("SpriteFrames_6nouk")
+centered = false
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="SmoothScrollContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="SmoothScrollContainer/MarginContainer/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+mouse_filter = 1
+text = "Current Alt Texture:"
+
+[node name="AltTexSpin" type="SpinBox" parent="SmoothScrollContainer/MarginContainer/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+mouse_filter = 1
+max_value = 0.0
 
 [node name="SavePngDialog" type="NativeFileDialog" parent="."]
 
 [node name="SaveGifDialog" type="NativeFileDialog" parent="."]
 
-[connection signal="item_selected" from="MarginContainer/VBoxContainer/AnimationSelector" to="." method="_on_animation_selector_item_selected"]
-[connection signal="pressed" from="MarginContainer/VBoxContainer/HBoxContainer/GifExportButton" to="." method="_on_gif_export_button_pressed"]
-[connection signal="pressed" from="MarginContainer/VBoxContainer/HBoxContainer/PngExportButton" to="." method="_on_png_export_button_pressed"]
-[connection signal="value_changed" from="MarginContainer/VBoxContainer/HBoxContainer/HBoxContainer/ScaleSpin" to="." method="_on_scale_spin_value_changed"]
-[connection signal="value_changed" from="MarginContainer/VBoxContainer/HBoxContainer/HBoxContainer2/OutlineSpin" to="." method="_on_outline_spin_value_changed"]
-[connection signal="color_changed" from="MarginContainer/VBoxContainer/HBoxContainer/HBoxContainer3/OutlineColor" to="." method="_on_outline_color_color_changed"]
+[connection signal="item_selected" from="SmoothScrollContainer/MarginContainer/VBoxContainer/AnimationSelector" to="." method="_on_animation_selector_item_selected"]
+[connection signal="pressed" from="SmoothScrollContainer/MarginContainer/VBoxContainer/HBoxContainer/GifExportButton" to="." method="_on_gif_export_button_pressed"]
+[connection signal="pressed" from="SmoothScrollContainer/MarginContainer/VBoxContainer/HBoxContainer/PngExportButton" to="." method="_on_png_export_button_pressed"]
+[connection signal="value_changed" from="SmoothScrollContainer/MarginContainer/VBoxContainer/HBoxContainer/HBoxContainer/ScaleSpin" to="." method="_on_scale_spin_value_changed"]
+[connection signal="value_changed" from="SmoothScrollContainer/MarginContainer/VBoxContainer/HBoxContainer/HBoxContainer2/OutlineSpin" to="." method="_on_outline_spin_value_changed"]
+[connection signal="color_changed" from="SmoothScrollContainer/MarginContainer/VBoxContainer/HBoxContainer/HBoxContainer3/OutlineColor" to="." method="_on_outline_color_color_changed"]
+[connection signal="value_changed" from="SmoothScrollContainer/MarginContainer/VBoxContainer/HBoxContainer2/AltTexSpin" to="." method="_on_alt_tex_spin_value_changed"]
 [connection signal="file_selected" from="SavePngDialog" to="." method="_on_save_png_dialog_file_selected"]
 [connection signal="file_selected" from="SaveGifDialog" to="." method="_on_save_gif_dialog_file_selected"]

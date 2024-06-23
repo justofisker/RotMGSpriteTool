@@ -6,11 +6,26 @@ const ObjectParser = preload("res://parsers/objects/object_parser.gd")
 
 func _ready() -> void:
 	var parser := ObjectParser.new()
-	#var characters := parser.parse_objects("res://assets/xml/theShattersObjects.xml")
-	var characters := parser.parse_objects("res://assets/xml/heroes.xml")
+	var characters := parser.parse_objects("res://assets/xml/theShattersObjects.xml")
+	#var characters := parser.parse_objects("res://assets/xml/heroes.xml")
 	#var characters := parser.parse_objects("res://assets/xml/oryxSanctuaryObjects.xml")
 	#var characters := parser.parse_objects("res://assets/xml/abyssOfDemonsObjects.xml")
 	#var characters := parser.parse_objects("res://assets/xml/moonlightVillageObjects.xml")
+	
+	#var characters : Array[Character] = []
+	#
+	#var dir := DirAccess.open("res://assets/xml/")
+#
+	#if dir:
+		#dir.list_dir_begin()
+		#var file_name = dir.get_next()
+		#while file_name != "":
+			#print(file_name)
+			#if !dir.current_is_dir():
+				#characters.append_array(parser.parse_objects("res://assets/xml/" + file_name))
+			#file_name = dir.get_next()
+	#else:
+		#pass
 	
 	get_tree().get_first_node_in_group("animation_panel") .characters = characters
 	for c in characters:

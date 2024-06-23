@@ -8,10 +8,12 @@ extends Panel
 @export var gif_button: Button
 @export var png_button: Button
 @export var sprite_control: Control
-
-@onready var scale_spin: SpinBox = $MarginContainer/VBoxContainer/HBoxContainer/HBoxContainer/ScaleSpin
-@onready var outline_spin: SpinBox = $MarginContainer/VBoxContainer/HBoxContainer/HBoxContainer2/OutlineSpin
-@onready var outline_color: ColorPickerButton = $MarginContainer/VBoxContainer/HBoxContainer/HBoxContainer3/OutlineColor
+@export var scale_spin: SpinBox
+@export var outline_spin: SpinBox
+@export var outline_color: ColorPickerButton
+@export var alt_tex_spin: SpinBox
+@export var alt_tex_sprite: AnimatedSprite2D
+@export var alt_tex_control: Control
 
 var characters: Array[Character]
 
@@ -19,6 +21,7 @@ var current_character: String :
 	set(value):
 		for c in characters:
 			if c.id == value:
+				self.c = c
 				label.text = c.id
 				current_character = value
 				animation_selector.clear()
@@ -37,10 +40,19 @@ var current_character: String :
 				else:
 					gif_button.disabled = true
 					png_button.disabled = true
+				
+				alt_tex_spin.editable = c.alt_textures.size() != 0
+				if c.alt_textures.size() != 0:
+					alt_tex_spin.max_value = c.alt_textures.size() - 1
+					alt_tex_spin.value = 0
+					alt_tex_spin.value_changed.emit()
 				break
+
+var c : Character
 
 func _on_animation_selector_item_selected(index: int) -> void:
 	anim_sprite.play(animation_selector.get_item_text(index))
+	sprite_control.custom_minimum_size = get_sprite_max_size()
 
 func _ready() -> void:
 	gif_dialog.file_mode = NativeFileDialog.FILE_MODE_SAVE_FILE
@@ -113,15 +125,13 @@ func _on_save_gif_dialog_file_selected(path: String) -> void:
 		exporter.add_frame(img, sprite_frames.get_frame_duration(animation_name, idx), MediumCutQuantization)
 		remove_child(viewport)
 	
-	print("done!")
-	
 	var file := FileAccess.open(path, FileAccess.WRITE)
 	file.store_buffer(exporter.export_file_data())
 	file.close()
 
-func get_sprite_max_size() -> Vector2i:
-	var sprite_frames := anim_sprite.sprite_frames
-	var animation_name := anim_sprite.animation
+func get_sprite_max_size(sprite: AnimatedSprite2D = anim_sprite) -> Vector2i:
+	var sprite_frames := sprite.sprite_frames
+	var animation_name := sprite.animation
 	var extents := Vector2i() 
 	for idx in sprite_frames.get_frame_count(animation_name):
 		var tex := sprite_frames.get_frame_texture(animation_name, idx)
@@ -136,7 +146,8 @@ func get_sprite_max_size() -> Vector2i:
 func _on_scale_spin_value_changed(value: float) -> void:
 	anim_sprite.scale = Vector2(value, value)
 	sprite_control.custom_minimum_size = get_sprite_max_size()
-	sprite_control.size = Vector2()
+	alt_tex_sprite.scale = Vector2(value, value)
+	alt_tex_control.custom_minimum_size = get_sprite_max_size(alt_tex_sprite)
 	anim_sprite.material.set_shader_parameter("scale", value)
 
 func _on_outline_spin_value_changed(value: float) -> void:
@@ -144,3 +155,16 @@ func _on_outline_spin_value_changed(value: float) -> void:
 
 func _on_outline_color_color_changed(color: Color) -> void:
 	anim_sprite.material.set_shader_parameter("outline_color", color)
+
+func _on_alt_tex_spin_value_changed(value: float) -> void:
+	if value > 0 && value < c.alt_textures.size():
+		var tex : TextureXml = c.alt_textures[str(int(value))]
+		alt_tex_sprite.sprite_frames.clear_all()
+		if tex.animated:
+			var anim_sprite := RotmgAtlases.get_animated_sprite(tex.file_name, tex.index)
+			alt_tex_sprite.sprite_frames = anim_sprite.sprite_frames
+		else:
+			var sprite_frames := SpriteFrames.new()
+			sprite_frames.add_animation("default")
+			sprite_frames.add_frame("default", tex.texture)
+		alt_tex_control.custom_minimum_size = get_sprite_max_size(alt_tex_sprite)

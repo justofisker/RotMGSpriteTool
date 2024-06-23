@@ -3,6 +3,7 @@ class_name Character extends XmlObject
 var texture: TextureXml
 var animations: Array[CharacterAnimation]
 var display_id: String
+var alt_textures: Dictionary
 
 static func parse(p: SimpleXmlParser) -> Character:
 	var c := Character.new()
@@ -12,19 +13,39 @@ static func parse(p: SimpleXmlParser) -> Character:
 	p.read()
 	
 	while !p.is_element_end():
-		if p.is_element():
-			match p.get_node_name():
-				"Texture":
-					c.texture = TextureXml.parse(p)
-				"AnimatedTexture":
-					c.texture = TextureXml.parse(p)
-				"Animation":
-					c.animations.append(CharacterAnimation.parse(p))
-				"DisplayId":
-					p.read_whitespace()
-					c.display_id = p.get_node_data()
-			p.skip_section()
+		match p.get_node_name():
+			"Texture":
+				c.texture = TextureXml.parse(p)
+			"AnimatedTexture":
+				c.texture = TextureXml.parse(p)
+			"Animation":
+				c.animations.append(CharacterAnimation.parse(p))
+			"DisplayId":
+				p.read_whitespace()
+				c.display_id = p.get_node_data()
+			"Presentation":
+				pass
+			"AltTexture":
+				_parse_alt_texture(c, p)
+		p.skip_section()
 		p.read()
 	
 	p.seek(offset)
 	return c
+
+static func _parse_alt_texture(c: Character, p: SimpleXmlParser) -> void:
+	var offset := p.get_node_offset()
+	
+	var id := p.get_attribute_value("id")
+	
+	p.read()
+	while  !p.is_element_end():
+		match p.get_node_name():
+			"AnimatedTexture":
+				c.alt_textures[id] = TextureXml.parse(p)
+			"Texture":
+				c.alt_textures[id] = TextureXml.parse(p)
+		p.skip_section()
+		p.read()
+	
+	p.seek(offset)

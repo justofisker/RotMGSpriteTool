@@ -1,8 +1,8 @@
 struct Position {
     x: float;
     y: float;
-    w: float;
     h: float;
+    w: float;
 }
 
 struct Color {
