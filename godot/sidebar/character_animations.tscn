@@ -57,7 +57,7 @@ script = ExtResource("4_chvjr")
 
 [node name="NativeFileDialog" type="NativeFileDialog" parent="Exports/GifExportButton"]
 title = "Save a GIF"
-root_subfolder = "./"
+access = 2
 
 [node name="Button" parent="Exports" node_paths=PackedStringArray("sprite") instance=ExtResource("7_8mw3h")]
 layout_mode = 2

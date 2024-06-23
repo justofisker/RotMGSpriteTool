@@ -8,5 +8,6 @@ text = "Export as PNG(s)"
 script = ExtResource("1_tf0aj")
 
 [node name="NativeFileDialog" type="NativeFileDialog" parent="."]
+access = 2
 
 [connection signal="file_selected" from="NativeFileDialog" to="." method="_on_dialog_file_selected"]

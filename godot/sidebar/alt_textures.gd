@@ -19,6 +19,8 @@ func _update_spin_box() -> void:
 	range.max_value = character.alt_textures.size() - 1
 
 func _update_sprite() -> void:
+	if character == null:
+		return
 	var sprite_frames = SpriteFrames.new()
 	
 	for idx in character.alt_textures.size():

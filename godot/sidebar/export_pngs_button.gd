@@ -8,11 +8,15 @@ func _ready() -> void:
 	pressed.connect(_on_pressed)
 
 func _on_pressed() -> void:
+	if DirAccess.dir_exists_absolute(GlobalSettings.last_save_location):
+		dialog.root_subfolder = GlobalSettings.last_save_location
+	else:
+		dialog.root_subfolder = "./"
 	dialog.show()
 
 func _on_dialog_file_selected(path: String) -> void:
-	var dir := path.substr(0, path.rfind("/") + 1)
-	dialog.root_subfolder = dir
+	var dir := path.substr(0, path.rfind("/"))
+	GlobalSettings.last_save_location = dir
 	
 	var sprite_frames = sprite.sprite_frames
 	var animation = sprite.animation

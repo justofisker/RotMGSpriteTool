@@ -7,11 +7,15 @@ func _ready() -> void:
 	dialog.add_filter("*.gif", "GIF Image (*.gif)")
 
 func _on_pressed() -> void:
+	if DirAccess.dir_exists_absolute(GlobalSettings.last_save_location):
+		dialog.root_subfolder = GlobalSettings.last_save_location
+	else:
+		dialog.root_subfolder = "./"
 	dialog.show()
 
 func _on_native_file_dialog_file_selected(path: String) -> void:
 	var dir := path.substr(0, path.rfind("/") + 1)
-	dialog.root_subfolder = dir
+	GlobalSettings.last_save_location = dir
 	
 	if !path.ends_with(".gif"):
 		path += ".gif"
