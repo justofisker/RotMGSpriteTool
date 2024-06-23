@@ -10,6 +10,10 @@ var texture: Texture2D :
 		texture = RotmgAtlases.get_texture(file_name, index)
 		return texture
 
+var texture_export: Texture2D :
+	get:
+		return RotmgAtlases.get_texture_export(file_name, index)
+
 static func parse(p: SimpleXmlParser) -> TextureXml:
 	var t := TextureXml.new()
 	

@@ -1,5 +1,7 @@
 extends Control
 
+@export var centered_h : bool = false
+
 var sprite: AnimatedSprite2D
 
 func _ready() -> void:
@@ -31,12 +33,16 @@ func _resize_to_animation() -> void:
 	custom_minimum_size *= sprite.scale
 
 func _reposition_frame() -> void:
-	if !is_instance_valid(sprite.sprite_frames):
+	if !is_instance_valid(sprite) || !is_instance_valid(sprite.sprite_frames):
 		return
 	var frame := sprite.sprite_frames.get_frame_texture(sprite.animation, sprite.frame)
 	if !is_instance_valid(frame):
 		return
-	sprite.position.x = 0
+	# TODO: There seems to maybe be some data about how to position this. Look into this
+	if centered_h:
+		sprite.position.x = (custom_minimum_size.x - frame.get_width() * sprite.scale.x) / 2.0
+	else:
+		sprite.position.x = 0
 	sprite.position.y = custom_minimum_size.y - frame.get_height() * sprite.scale.y
 
 func _on_sprite_frames_changed() -> void:

@@ -18,6 +18,7 @@ config/icon="res://icon.svg"
 [autoload]
 
 RotmgAtlases="*res://rotmg_atlases_dll.gd"
+GlobalSettings="*res://global_settings.gd"
 
 [editor_plugins]
 

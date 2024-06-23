@@ -4,6 +4,7 @@ extends PanelContainer
 
 @export var animations: Control
 @export var alt_textures: Control
+@export var sprite_view: Control
 
 var character: Character :
 	set(value):
@@ -11,3 +12,4 @@ var character: Character :
 		character_id.text = character.id
 		animations.character = character
 		alt_textures.character = character
+		sprite_view.character = character

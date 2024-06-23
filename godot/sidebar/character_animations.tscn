@@ -1,10 +1,12 @@
-[gd_scene load_steps=6 format=3 uid="uid://b1fp7rgxaera8"]
+[gd_scene load_steps=8 format=3 uid="uid://b1fp7rgxaera8"]
 
 [ext_resource type="Script" path="res://sidebar/character_animations.gd" id="1_bjg0q"]
 [ext_resource type="Script" path="res://sidebar/animated_sprite_container.gd" id="1_l3m8r"]
+[ext_resource type="PackedScene" uid="uid://byt5pp40l3fs1" path="res://sidebar/divider.tscn" id="2_kw6a4"]
 [ext_resource type="Material" uid="uid://du4id8y1i8pqb" path="res://sidebar/outline_preview_material.tres" id="3_da1ci"]
 [ext_resource type="Script" path="res://sidebar/gif_export_button.gd" id="4_chvjr"]
-[ext_resource type="Script" path="res://sidebar/export_options.gd" id="4_dn77a"]
+[ext_resource type="Script" path="res://sidebar/sprite_preview.gd" id="4_m8aed"]
+[ext_resource type="PackedScene" uid="uid://c3rbedxxbop6j" path="res://sidebar/save_pngs_button.tscn" id="7_8mw3h"]
 
 [node name="CharacterAnimations" type="VBoxContainer" node_paths=PackedStringArray("animation_selector")]
 offset_right = 379.0
@@ -12,17 +14,21 @@ offset_bottom = 416.0
 script = ExtResource("1_bjg0q")
 animation_selector = NodePath("AnimationSelector")
 
+[node name="Divider" parent="." instance=ExtResource("2_kw6a4")]
+layout_mode = 2
+
 [node name="SectionTitleLabel" type="Label" parent="."]
 layout_mode = 2
 text = "Animations"
 horizontal_alignment = 1
 
 [node name="AnimationSpriteContol" type="Control" parent="."]
-custom_minimum_size = Vector2(0, 202.745)
+custom_minimum_size = Vector2(0, 200)
 layout_mode = 2
 size_flags_horizontal = 4
 mouse_filter = 1
 script = ExtResource("1_l3m8r")
+centered_h = true
 
 [node name="Sprite" type="AnimatedSprite2D" parent="AnimationSpriteContol"]
 unique_name_in_owner = true
@@ -31,64 +37,11 @@ material = ExtResource("3_da1ci")
 scale = Vector2(5, 5)
 speed_scale = 0.2
 centered = false
+script = ExtResource("4_m8aed")
 
 [node name="AnimationSelector" type="OptionButton" parent="."]
 layout_mode = 2
 mouse_filter = 1
-
-[node name="ExportOptions" type="HFlowContainer" parent="." node_paths=PackedStringArray("scale_spin", "outline_spin", "color_selector", "sprite")]
-unique_name_in_owner = true
-layout_mode = 2
-script = ExtResource("4_dn77a")
-scale_spin = NodePath("ExportScale/ScaleSpin")
-outline_spin = NodePath("OutlineSize/OutlineSpin")
-color_selector = NodePath("OutlineColor/OutlineColor")
-sprite = NodePath("../AnimationSpriteContol/Sprite")
-
-[node name="ExportScale" type="HBoxContainer" parent="ExportOptions"]
-layout_mode = 2
-
-[node name="Label" type="Label" parent="ExportOptions/ExportScale"]
-layout_mode = 2
-mouse_filter = 1
-text = "Export Scale"
-
-[node name="ScaleSpin" type="SpinBox" parent="ExportOptions/ExportScale"]
-layout_mode = 2
-mouse_filter = 1
-min_value = 1.0
-max_value = 10.0
-value = 5.0
-suffix = "x"
-
-[node name="OutlineSize" type="HBoxContainer" parent="ExportOptions"]
-layout_mode = 2
-
-[node name="Label" type="Label" parent="ExportOptions/OutlineSize"]
-layout_mode = 2
-mouse_filter = 1
-text = "Outline Size"
-
-[node name="OutlineSpin" type="SpinBox" parent="ExportOptions/OutlineSize"]
-layout_mode = 2
-mouse_filter = 1
-max_value = 10.0
-value = 1.0
-suffix = "px"
-
-[node name="OutlineColor" type="HBoxContainer" parent="ExportOptions"]
-layout_mode = 2
-
-[node name="Label" type="Label" parent="ExportOptions/OutlineColor"]
-layout_mode = 2
-mouse_filter = 1
-text = "Outline Color"
-
-[node name="OutlineColor" type="ColorPickerButton" parent="ExportOptions/OutlineColor"]
-custom_minimum_size = Vector2(32, 32)
-layout_mode = 2
-mouse_filter = 1
-edit_alpha = false
 
 [node name="Exports" type="HBoxContainer" parent="."]
 layout_mode = 2
@@ -106,20 +59,12 @@ script = ExtResource("4_chvjr")
 title = "Save a GIF"
 root_subfolder = "./"
 
-[node name="PngExportButton" type="Button" parent="Exports"]
+[node name="Button" parent="Exports" node_paths=PackedStringArray("sprite") instance=ExtResource("7_8mw3h")]
 layout_mode = 2
-size_flags_horizontal = 0
-mouse_filter = 1
-text = "Export Frames as PNGs"
-
-[node name="NativeFileDialog" type="NativeFileDialog" parent="Exports/PngExportButton"]
-root_subfolder = "./"
+sprite = NodePath("../../AnimationSpriteContol/Sprite")
 
 [node name="PanelContainer" type="PanelContainer" parent="."]
 layout_mode = 2
 
 [connection signal="item_selected" from="AnimationSelector" to="." method="_on_animation_selector_item_selected"]
-[connection signal="value_changed" from="ExportOptions/ExportScale/ScaleSpin" to="ExportOptions" method="_on_scale_spin_value_changed"]
-[connection signal="value_changed" from="ExportOptions/OutlineSize/OutlineSpin" to="ExportOptions" method="_on_outline_spin_value_changed"]
-[connection signal="color_changed" from="ExportOptions/OutlineColor/OutlineColor" to="ExportOptions" method="_on_outline_color_color_changed"]
 [connection signal="file_selected" from="Exports/GifExportButton/NativeFileDialog" to="Exports/GifExportButton" method="_on_native_file_dialog_file_selected"]

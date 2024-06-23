@@ -14,15 +14,9 @@ func _setup_sprite() -> void:
 	var sprite_frames := SpriteFrames.new()
 	if character.texture != null:
 		if character.texture.animated:
-			var frames = RotmgAtlases.get_animated_sprite_textures(character.texture.file_name, character.texture.index)
+			var frames = RotmgAtlases.get_animated_sprite_textures_export(character.texture.file_name, character.texture.index)
 			for frame in frames:
-				# This fixes the outline of the character
-				var expanded_frame : AtlasTexture = frame.duplicate()
-				expanded_frame.region.position.x -= 1
-				expanded_frame.region.position.y -= 1
-				expanded_frame.region.size.x += 2
-				expanded_frame.region.size.y += 2
-				sprite_frames.add_frame("default", expanded_frame)
+				sprite_frames.add_frame("default", frame)
 		elif character.texture.texture != null:
 			sprite_frames.add_frame("default", character.texture.texture)
 	else:

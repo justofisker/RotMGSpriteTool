@@ -1,10 +1,12 @@
-[gd_scene load_steps=9 format=3 uid="uid://c8xoealrtv7p4"]
+[gd_scene load_steps=11 format=3 uid="uid://c8xoealrtv7p4"]
 
 [ext_resource type="Script" path="res://sidebar/sidebar.gd" id="1_4c023"]
 [ext_resource type="Script" path="res://addons/SmoothScroll/SmoothScrollContainer.gd" id="2_qhpb7"]
 [ext_resource type="Script" path="res://addons/SmoothScroll/scroll_damper/expo_scroll_damper.gd" id="3_ro2ds"]
 [ext_resource type="PackedScene" uid="uid://b1fp7rgxaera8" path="res://sidebar/character_animations.tscn" id="4_meb24"]
 [ext_resource type="PackedScene" uid="uid://di3w2cukl2ajp" path="res://sidebar/alt_textures.tscn" id="5_7pihy"]
+[ext_resource type="PackedScene" uid="uid://cfdqab6g5ibvq" path="res://sidebar/sprite_view.tscn" id="5_23nd3"]
+[ext_resource type="PackedScene" uid="uid://b7yw6ubmv2fgl" path="res://sidebar/export_options.tscn" id="6_hjpbw"]
 
 [sub_resource type="Resource" id="Resource_rn8v4"]
 script = ExtResource("3_ro2ds")
@@ -21,7 +23,7 @@ rebound_strength = 7.0
 [sub_resource type="LabelSettings" id="LabelSettings_lvg2c"]
 font_size = 24
 
-[node name="SideBar" type="PanelContainer" node_paths=PackedStringArray("character_id", "animations", "alt_textures") groups=["sidebar"]]
+[node name="SideBar" type="PanelContainer" node_paths=PackedStringArray("character_id", "animations", "alt_textures", "sprite_view") groups=["sidebar"]]
 custom_minimum_size = Vector2(400, 0)
 anchors_preset = 9
 anchor_bottom = 1.0
@@ -31,6 +33,7 @@ script = ExtResource("1_4c023")
 character_id = NodePath("SmoothScrollContainer/MarginContainer/VBoxContainer/CharacterNameLabel")
 animations = NodePath("SmoothScrollContainer/MarginContainer/VBoxContainer/CharacterAnimations")
 alt_textures = NodePath("SmoothScrollContainer/MarginContainer/VBoxContainer/AltTextures")
+sprite_view = NodePath("SmoothScrollContainer/MarginContainer/VBoxContainer/SpriteView")
 
 [node name="SmoothScrollContainer" type="ScrollContainer" parent="."]
 layout_mode = 2
@@ -59,10 +62,18 @@ label_settings = SubResource("LabelSettings_lvg2c")
 horizontal_alignment = 1
 autowrap_mode = 3
 
+[node name="ExportOptions" parent="SmoothScrollContainer/MarginContainer/VBoxContainer" instance=ExtResource("6_hjpbw")]
+layout_mode = 2
+
+[node name="SpriteView" parent="SmoothScrollContainer/MarginContainer/VBoxContainer" instance=ExtResource("5_23nd3")]
+layout_mode = 2
+
 [node name="CharacterAnimations" parent="SmoothScrollContainer/MarginContainer/VBoxContainer" instance=ExtResource("4_meb24")]
+visible = false
 layout_mode = 2
 
 [node name="AltTextures" parent="SmoothScrollContainer/MarginContainer/VBoxContainer" instance=ExtResource("5_7pihy")]
+visible = false
 layout_mode = 2
 
 [node name="Node" type="Node" parent="."]

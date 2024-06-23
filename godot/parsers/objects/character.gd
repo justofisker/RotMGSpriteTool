@@ -3,7 +3,7 @@ class_name Character extends XmlObject
 var texture: TextureXml
 var animations: Array[CharacterAnimation]
 var display_id: String
-var alt_textures: Dictionary
+var alt_textures: Array[TextureXml]
 
 static func parse(p: SimpleXmlParser) -> Character:
 	var c := Character.new()
@@ -42,9 +42,9 @@ static func _parse_alt_texture(c: Character, p: SimpleXmlParser) -> void:
 	while  !p.is_element_end():
 		match p.get_node_name():
 			"AnimatedTexture":
-				c.alt_textures[id] = TextureXml.parse(p)
+				c.alt_textures.push_back(TextureXml.parse(p))
 			"Texture":
-				c.alt_textures[id] = TextureXml.parse(p)
+				c.alt_textures.push_back(TextureXml.parse(p))
 		p.skip_section()
 		p.read()
 	

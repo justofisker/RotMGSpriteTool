@@ -1,0 +1,58 @@
+[gd_scene load_steps=2 format=3 uid="uid://b7yw6ubmv2fgl"]
+
+[ext_resource type="Script" path="res://sidebar/export_options.gd" id="1_fgev5"]
+
+[node name="ExportOptions" type="HFlowContainer" node_paths=PackedStringArray("scale_spin", "outline_spin", "color_selector")]
+script = ExtResource("1_fgev5")
+scale_spin = NodePath("ExportScale/ScaleSpin")
+outline_spin = NodePath("OutlineSize/OutlineSpin")
+color_selector = NodePath("OutlineColor/OutlineColor")
+
+[node name="ExportScale" type="HBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="ExportScale"]
+layout_mode = 2
+mouse_filter = 1
+text = "Image Scale"
+
+[node name="ScaleSpin" type="SpinBox" parent="ExportScale"]
+layout_mode = 2
+mouse_filter = 1
+min_value = 1.0
+max_value = 10.0
+value = 5.0
+suffix = "x"
+
+[node name="OutlineSize" type="HBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="OutlineSize"]
+layout_mode = 2
+mouse_filter = 1
+text = "Outline Size"
+
+[node name="OutlineSpin" type="SpinBox" parent="OutlineSize"]
+layout_mode = 2
+mouse_filter = 1
+max_value = 10.0
+value = 1.0
+suffix = "px"
+
+[node name="OutlineColor" type="HBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="OutlineColor"]
+layout_mode = 2
+mouse_filter = 1
+text = "Outline Color"
+
+[node name="OutlineColor" type="ColorPickerButton" parent="OutlineColor"]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+mouse_filter = 1
+edit_alpha = false
+
+[connection signal="value_changed" from="ExportScale/ScaleSpin" to="." method="_on_scale_spin_value_changed"]
+[connection signal="value_changed" from="OutlineSize/OutlineSpin" to="." method="_on_outline_spin_value_changed"]
+[connection signal="color_changed" from="OutlineColor/OutlineColor" to="." method="_on_outline_color_color_changed"]
