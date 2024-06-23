@@ -41,9 +41,11 @@ func _reposition_frame() -> void:
 
 func _on_sprite_frames_changed() -> void:
 	_resize_to_animation()
+	_reposition_frame()
 
 func _on_animated_changed() -> void:
 	_resize_to_animation()
+	_reposition_frame()
 
 func _on_frame_changed() -> void:
 	_reposition_frame()
