@@ -4,7 +4,7 @@ extends Button
 @export var sprite : AnimatedSprite2D
 
 func _ready() -> void:
-	dialog.add_filter("*.png", "*.png (PNG Image)")
+	dialog.add_filter("*.png", "PNG Image (*.png)")
 	pressed.connect(_on_pressed)
 
 func _on_pressed() -> void:
