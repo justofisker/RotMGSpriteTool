@@ -59,6 +59,18 @@ script = ExtResource("4_chvjr")
 title = "Save a GIF"
 access = 2
 
+[node name="GifExportButton2" type="Button" parent="Exports"]
+layout_mode = 2
+size_flags_horizontal = 0
+mouse_filter = 1
+text = "Export as WebP"
+script = ExtResource("4_chvjr")
+file_type = 1
+
+[node name="NativeFileDialog" type="NativeFileDialog" parent="Exports/GifExportButton2"]
+title = "Save a WebP"
+access = 2
+
 [node name="Button" parent="Exports" node_paths=PackedStringArray("sprite") instance=ExtResource("7_8mw3h")]
 layout_mode = 2
 sprite = NodePath("../../AnimationSpriteContol/Sprite")
@@ -68,3 +80,4 @@ layout_mode = 2
 
 [connection signal="item_selected" from="AnimationSelector" to="." method="_on_animation_selector_item_selected"]
 [connection signal="file_selected" from="Exports/GifExportButton/NativeFileDialog" to="Exports/GifExportButton" method="_on_native_file_dialog_file_selected"]
+[connection signal="file_selected" from="Exports/GifExportButton2/NativeFileDialog" to="Exports/GifExportButton2" method="_on_native_file_dialog_file_selected"]

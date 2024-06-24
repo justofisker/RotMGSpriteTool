@@ -3,7 +3,7 @@ use godot::prelude::*;
 struct SpriteTools;
 
 mod spritesheet;
-//mod spritesheetf_generated;
+mod webp_exporter;
 
 #[gdextension]
 unsafe impl ExtensionLibrary for SpriteTools {}

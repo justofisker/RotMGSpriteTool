@@ -38,9 +38,9 @@ impl INode for SpriteSheetDeserializer {
     }
 
     fn ready(&mut self) {
-        const MAP_OBJECT_PATH : &str = "res://assets/atlases/mapObjects.png";
-        const GROUND_TILES_PATH : &str = "res://assets/atlases/groundTiles.png";
-        const CHARACTERS_PATH : &str = "res://assets/atlases/characters.png";
+        const MAP_OBJECT_PATH: &str = "res://assets/atlases/mapObjects.png";
+        const GROUND_TILES_PATH: &str = "res://assets/atlases/groundTiles.png";
+        const CHARACTERS_PATH: &str = "res://assets/atlases/characters.png";
 
         //self.map_objects = load(MAP_OBJECT_PATH);
         //self.ground_tiles = load(GROUND_TILES_PATH);
@@ -69,10 +69,12 @@ impl INode for SpriteSheetDeserializer {
                 FileAccess::get_file_as_bytes(spritesheef_path.into()).as_slice(),
             ) {
                 for animated_sprite in sprite_sheet_root.animated_sprites().unwrap() {
-                    self.animated_sprites.push(AnimatedSprite::from_file(&animated_sprite))
+                    self.animated_sprites
+                        .push(AnimatedSprite::from_file(&animated_sprite))
                 }
                 for sprite_sheet in sprite_sheet_root.sprites().unwrap() {
-                    self.sprite_sheets.push(SpriteSheet::from_file(&sprite_sheet))
+                    self.sprite_sheets
+                        .push(SpriteSheet::from_file(&sprite_sheet))
                 }
             } else {
             }
@@ -84,9 +86,15 @@ impl INode for SpriteSheetDeserializer {
 impl SpriteSheetDeserializer {
     fn get_atlas_texture(&self, atlas_id: u64, region: &Position) -> Gd<AtlasTexture> {
         let mut atlas_texture = AtlasTexture::new_gd();
-        atlas_texture.set_region(Rect2{
-            position: Vector2 { x: region.x, y: region.y },
-            size: Vector2 { x: region.w, y: region.h },
+        atlas_texture.set_region(Rect2 {
+            position: Vector2 {
+                x: region.x,
+                y: region.y,
+            },
+            size: Vector2 {
+                x: region.w,
+                y: region.h,
+            },
         });
         match atlas_id {
             1 => {
@@ -108,8 +116,12 @@ impl SpriteSheetDeserializer {
         let mut array = VariantArray::new();
 
         for sprite in &self.animated_sprites {
-            if sprite.sprite_sheet_name.eq_ignore_ascii_case(&sprite_sheet) && sprite.index == index {
-                array.push(self.get_atlas_texture(sprite.sprite.a_id, &sprite.sprite.position).to_variant());
+            if sprite.sprite_sheet_name.eq_ignore_ascii_case(&sprite_sheet) && sprite.index == index
+            {
+                array.push(
+                    self.get_atlas_texture(sprite.sprite.a_id, &sprite.sprite.position)
+                        .to_variant(),
+                );
             }
         }
 
@@ -124,7 +136,7 @@ impl SpriteSheetDeserializer {
             if sheet.sprite_sheet_name.eq_ignore_ascii_case(&sheet_name) {
                 for sprite in &sheet.sprites {
                     if sprite.index == index {
-                        return self.get_atlas_texture(sprite.a_id, &sprite.position)
+                        return self.get_atlas_texture(sprite.a_id, &sprite.position);
                     }
                 }
                 break;
@@ -218,7 +230,7 @@ impl SpriteSheet {
         for sprite in sprite_sheet.sprites().unwrap() {
             out.sprites.push(Sprite::from_file(&sprite));
         }
-        
+
         out
     }
 }
