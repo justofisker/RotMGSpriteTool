@@ -15,9 +15,9 @@ use spritesheetf_generated::root_as_sprite_sheet_root;
 #[derive(GodotClass)]
 #[class(base=Node)]
 struct SpriteSheetDeserializer {
-    map_objects: Gd<Texture2D>,
-    ground_tiles: Gd<Texture2D>,
-    characters: Gd<Texture2D>,
+    map_objects: Option<Gd<Texture2D>>,
+    ground_tiles: Option<Gd<Texture2D>>,
+    characters: Option<Gd<Texture2D>>,
     sprite_sheets: Vec<SpriteSheet>,
     animated_sprites: Vec<AnimatedSprite>,
 
@@ -28,9 +28,9 @@ struct SpriteSheetDeserializer {
 impl INode for SpriteSheetDeserializer {
     fn init(base: Base<Node>) -> Self {
         Self {
-            map_objects: Gd::default(),
-            ground_tiles: Gd::default(),
-            characters: Gd::default(),
+            map_objects: None,
+            ground_tiles: None,
+            characters: None,
             sprite_sheets: vec![],
             animated_sprites: vec![],
             base,
@@ -38,32 +38,22 @@ impl INode for SpriteSheetDeserializer {
     }
 
     fn ready(&mut self) {
-        const MAP_OBJECT_PATH: &str = "res://assets/atlases/mapObjects.png";
-        const GROUND_TILES_PATH: &str = "res://assets/atlases/groundTiles.png";
-        const CHARACTERS_PATH: &str = "res://assets/atlases/characters.png";
+        fn load_img(file_path: &str) -> Option<Gd<Texture2D>> {
+            if FileAccess::file_exists(file_path.into()) {
+                let mut img = Image::new_gd();
+                img.load(file_path.into());
+                Some(ImageTexture::create_from_image(img).unwrap().upcast())
+            } else {
+                godot_error!("Failed to load image file: {}", file_path);
+                None
+            }
+        }
 
-        //self.map_objects = load(MAP_OBJECT_PATH);
-        //self.ground_tiles = load(GROUND_TILES_PATH);
-        //self.characters = load(CHARACTERS_PATH);
-
-        if FileAccess::file_exists(MAP_OBJECT_PATH.into()) {
-            let mut img = Image::new_gd();
-            img.load(MAP_OBJECT_PATH.into());
-            self.map_objects = ImageTexture::create_from_image(img).unwrap().upcast();
-        }
-        if FileAccess::file_exists(GROUND_TILES_PATH.into()) {
-            let mut img = Image::new_gd();
-            img.load(GROUND_TILES_PATH.into());
-            self.ground_tiles = ImageTexture::create_from_image(img).unwrap().upcast();
-        }
-        if FileAccess::file_exists(CHARACTERS_PATH.into()) {
-            let mut img = Image::new_gd();
-            img.load(CHARACTERS_PATH.into());
-            self.characters = ImageTexture::create_from_image(img).unwrap().upcast();
-        }
+        self.map_objects = load_img("res://assets/atlases/mapObjects.png");
+        self.ground_tiles = load_img("res://assets/atlases/groundTiles.png");
+        self.characters = load_img("res://assets/atlases/characters.png");
 
         let spritesheef_path = "res://assets/atlases/spritesheetf";
-
         if FileAccess::file_exists(spritesheef_path.into()) {
             if let Ok(sprite_sheet_root) = root_as_sprite_sheet_root(
                 FileAccess::get_file_as_bytes(spritesheef_path.into()).as_slice(),
@@ -84,7 +74,7 @@ impl INode for SpriteSheetDeserializer {
 
 #[godot_api]
 impl SpriteSheetDeserializer {
-    fn get_atlas_texture(&self, atlas_id: u64, region: &Position) -> Gd<AtlasTexture> {
+    fn get_atlas_texture(&self, atlas_id: u64, region: &Position) -> Option<Gd<AtlasTexture>> {
         let mut atlas_texture = AtlasTexture::new_gd();
         atlas_texture.set_region(Rect2 {
             position: Vector2 {
@@ -98,17 +88,31 @@ impl SpriteSheetDeserializer {
         });
         match atlas_id {
             1 => {
-                atlas_texture.set_atlas(self.ground_tiles.clone());
+                if let Some(ground_tiles) = self.ground_tiles.clone() {
+                    atlas_texture.set_atlas(ground_tiles);
+                } else {
+                    return None;
+                }
             }
             2 => {
-                atlas_texture.set_atlas(self.characters.clone());
+                if let Some(characters) = self.characters.clone() {
+                    atlas_texture.set_atlas(characters);
+                } else {
+                    return None;
+                }
             }
             4 => {
-                atlas_texture.set_atlas(self.map_objects.clone());
+                if let Some(map_objects) = self.map_objects.clone() {
+                    atlas_texture.set_atlas(map_objects);
+                } else {
+                    return None;
+                }
             }
-            _ => {}
+            _ => {
+                return None;
+            }
         }
-        atlas_texture
+        Some(atlas_texture)
     }
 
     #[func]
@@ -129,9 +133,7 @@ impl SpriteSheetDeserializer {
     }
 
     #[func]
-    fn get_texture(&self, sheet_name: String, index: u16) -> Gd<AtlasTexture> {
-        let atlas_texture = AtlasTexture::new_gd();
-
+    fn get_texture(&self, sheet_name: String, index: u16) -> Option<Gd<AtlasTexture>> {
         for sheet in &self.sprite_sheets {
             if sheet.sprite_sheet_name.eq_ignore_ascii_case(&sheet_name) {
                 for sprite in &sheet.sprites {
@@ -143,7 +145,22 @@ impl SpriteSheetDeserializer {
             }
         }
 
-        return atlas_texture;
+        None
+    }
+
+    #[func]
+    fn get_atlas_characters(&self) -> Option<Gd<Texture2D>> {
+        return self.characters.clone();
+    }
+
+    #[func]
+    fn get_atlas_map_objects(&mut self) -> Option<Gd<Texture2D>> {
+        return self.map_objects.clone();
+    }
+
+    #[func]
+    fn get_atlas_ground_tiles(&self) -> Option<Gd<Texture2D>> {
+        return self.ground_tiles.clone();
     }
 }
 

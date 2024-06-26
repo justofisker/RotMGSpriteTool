@@ -18,34 +18,41 @@ func parse_objects(path: String) -> Array[Character]:
 	var chars : Array[Character] = []
 	
 	while !p.is_element_end():
-		#var id := p.get_attribute_value("id")
+		var id := p.get_attribute_value("id")
 		#var type := p.get_attribute_value("type").to_int()
 		
 		var offset := p.get_node_offset()
 		p.read()
 		var object_class : String
+		var object_class_set := false
 		while !p.is_element_end():
 			if p.get_node_name() == "Class":
 				p.read_whitespace()
 				object_class = p.get_node_data()
+				object_class_set = true
+				break
 			p.skip_section()
 			p.read()
 		p.seek(offset)
 		
-		match object_class:
-			"Wall":
-				pass
-			"Projectile":
-				pass
-			"GameObject":
-				pass
-			"Portal":
-				pass
-			"Character":
-				var c = Character.parse(p)
-				chars.append(c)
-			_:
-				push_warning("Unknown object class: ", object_class)
+		if object_class_set:
+			match object_class:
+				"Wall":
+					pass
+				"Projectile":
+					pass
+				"GameObject":
+					pass
+				"Portal":
+					pass
+				"Character":
+					var c = Character.parse(p)
+					chars.append(c)
+				"InteractiveInfoObject":
+					pass
+				_:
+					print(id)
+					push_warning("Unknown object class: ", object_class)
 		
 		p.skip_section()
 		if !p.read_possible_end():

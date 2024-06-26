@@ -32,8 +32,6 @@ func _add_frames() -> void:
 	if character == null:
 		return
 	var sprite_frames := SpriteFrames.new()
-	var outline_size : int = GlobalSettings.export_outline_size
-	var export_scale : int = GlobalSettings.export_scale
 	for idx in character.animations.size():
 		var anim : CharacterAnimation = character.animations[idx]
 		var animation := anim.id
@@ -48,4 +46,4 @@ func _add_frames() -> void:
 	animation_selector.select(animation_selector.selected)
 
 func _on_animation_selector_item_selected(index: int) -> void:
-	%Sprite.play(animation_selector.get_item_text(animation_selector.selected))
+	%Sprite.play(animation_selector.get_item_text(index))

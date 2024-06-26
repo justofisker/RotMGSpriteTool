@@ -20,9 +20,18 @@ config/icon="res://icon.svg"
 RotmgAtlases="*res://rotmg_atlases_dll.gd"
 GlobalSettings="*res://global_settings.gd"
 
+[display]
+
+window/subwindows/embed_subwindows=false
+
 [editor_plugins]
 
 enabled=PackedStringArray("res://addons/SmoothScroll/plugin.cfg", "res://addons/native_dialogs/plugin.cfg")
+
+[filesystem]
+
+import/blender/enabled=false
+import/fbx/enabled=false
 
 [rendering]
 

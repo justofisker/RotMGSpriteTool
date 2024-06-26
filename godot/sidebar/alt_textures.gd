@@ -1,22 +1,22 @@
 extends VBoxContainer
 
-@export var range: HSlider
+@export var slider: HSlider
 
 var character: Character :
 	set(value):
 		character = value
 		visible = character.alt_textures.size() != 0
 		if visible:
-			_update_spin_box()
+			_update_slider()
 			_update_sprite()
 
 func _ready() -> void:
 	GlobalSettings.export_setting_changed.connect(_update_sprite)
 
-func _update_spin_box() -> void:
-	range.value = 0
-	range.tick_count = character.alt_textures.size()
-	range.max_value = character.alt_textures.size() - 1
+func _update_slider() -> void:
+	slider.value = 0
+	slider.tick_count = character.alt_textures.size()
+	slider.max_value = character.alt_textures.size() - 1
 
 func _update_sprite() -> void:
 	if character == null:

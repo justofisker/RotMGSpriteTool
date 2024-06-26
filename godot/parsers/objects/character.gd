@@ -36,7 +36,7 @@ static func parse(p: SimpleXmlParser) -> Character:
 static func _parse_alt_texture(c: Character, p: SimpleXmlParser) -> void:
 	var offset := p.get_node_offset()
 	
-	var id := p.get_attribute_value("id")
+	var _id := p.get_attribute_value("id")
 	
 	p.read()
 	while  !p.is_element_end():

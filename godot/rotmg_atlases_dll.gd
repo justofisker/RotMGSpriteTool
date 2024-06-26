@@ -1,9 +1,9 @@
 extends SpriteSheetDeserializer
- 
+
 func get_animated_sprite_textures_export(sprite_sheet: String, index: int, default: bool = false) -> Array[Texture2D]:
 	var frames = get_animated_sprite_textures(sprite_sheet, index)
 	
-	var out : Array[Texture2D]
+	var out : Array[Texture2D] = []
 	
 	var outline_size := GlobalSettings.export_outline_size
 	var export_scale := GlobalSettings.export_scale

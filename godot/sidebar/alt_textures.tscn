@@ -9,11 +9,11 @@
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_6nouk"]
 
-[node name="AltTextures" type="VBoxContainer" node_paths=PackedStringArray("range")]
+[node name="AltTextures" type="VBoxContainer" node_paths=PackedStringArray("slider")]
 offset_right = 349.0
 offset_bottom = 470.0
 script = ExtResource("1_a6krb")
-range = NodePath("HSlider")
+slider = NodePath("HSlider")
 
 [node name="Divider" parent="." instance=ExtResource("2_8w3wk")]
 layout_mode = 2

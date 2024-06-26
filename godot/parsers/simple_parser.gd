@@ -33,6 +33,12 @@ func get_attribute_value(name: String) -> String:
 	push_warning("Couldn't find attribute with name: ", name)
 	return ""
 
+func has_attribute_value(name: String) -> bool:
+	for idx in parser.get_attribute_count():
+		if parser.get_attribute_name(idx) == name:
+			return true
+	return false
+
 func get_node_data_as_int() -> int:
 	return parser.get_node_data().to_int()
 

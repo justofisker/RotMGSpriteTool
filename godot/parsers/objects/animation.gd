@@ -9,8 +9,9 @@ var frame_durations: Array[float]
 
 static func parse(p: SimpleXmlParser) -> CharacterAnimation:
 	var a := CharacterAnimation.new()
-	a.id = p.get_attribute_value("id")
-	if a.id == "":
+	if p.has_attribute_value("id"):
+		a.id = p.get_attribute_value("id")
+	else:
 		a.id = ""
 	a.prob = p.get_attribute_value("prob").to_float()
 	a.period = p.get_attribute_value("period").to_int()
