@@ -1,12 +1,11 @@
 extends VBoxContainer
 
+@onready var button: Button = $Button
+
 var character: Character :
 	set(value):
 		character = value
 		_update_sprite()
-
-func _ready() -> void:
-	GlobalSettings.export_setting_changed.connect(_update_sprite)
 
 func _update_sprite() -> void:
 	visible = true
@@ -20,9 +19,11 @@ func _update_sprite() -> void:
 			sprite_frames.add_frame("default", frame)
 		%Sprite.sprite_frames = sprite_frames
 		%Sprite.play()
+		button.export_data = ExportData.from_animated_textures(RotmgAtlases.get_animated_textures(character.texture.file_name, character.texture.index))
 	elif is_instance_valid(character.texture.texture):
 		var sprite_frames := SpriteFrames.new()
 		sprite_frames.add_frame("default", character.texture.texture_export)
+		button.export_data = ExportData.from_texture(RotmgAtlases.get_texture(character.texture.file_name, character.texture.index))
 		%Sprite.sprite_frames = sprite_frames
 	else:
 		visible = false

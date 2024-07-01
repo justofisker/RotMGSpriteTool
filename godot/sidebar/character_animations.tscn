@@ -1,18 +1,17 @@
-[gd_scene load_steps=8 format=3 uid="uid://b1fp7rgxaera8"]
+[gd_scene load_steps=6 format=3 uid="uid://b1fp7rgxaera8"]
 
 [ext_resource type="Script" path="res://sidebar/character_animations.gd" id="1_bjg0q"]
 [ext_resource type="Script" path="res://sidebar/animated_sprite_container.gd" id="1_l3m8r"]
 [ext_resource type="PackedScene" uid="uid://byt5pp40l3fs1" path="res://sidebar/divider.tscn" id="2_kw6a4"]
-[ext_resource type="Material" uid="uid://du4id8y1i8pqb" path="res://sidebar/outline_preview_material.tres" id="3_da1ci"]
-[ext_resource type="Script" path="res://sidebar/gif_export_button.gd" id="4_chvjr"]
-[ext_resource type="Script" path="res://sidebar/sprite_preview.gd" id="4_m8aed"]
+[ext_resource type="Material" uid="uid://bud36ywkxwv5b" path="res://character_list/outline_material.tres" id="4_hprpm"]
 [ext_resource type="PackedScene" uid="uid://c3rbedxxbop6j" path="res://sidebar/save_pngs_button.tscn" id="7_8mw3h"]
 
-[node name="CharacterAnimations" type="VBoxContainer" node_paths=PackedStringArray("animation_selector")]
+[node name="CharacterAnimations" type="VBoxContainer" node_paths=PackedStringArray("animation_selector", "export_button")]
 offset_right = 379.0
 offset_bottom = 416.0
 script = ExtResource("1_bjg0q")
 animation_selector = NodePath("AnimationSelector")
+export_button = NodePath("Exports/Button")
 
 [node name="Divider" parent="." instance=ExtResource("2_kw6a4")]
 layout_mode = 2
@@ -33,11 +32,10 @@ centered_h = true
 [node name="Sprite" type="AnimatedSprite2D" parent="AnimationSpriteContol"]
 unique_name_in_owner = true
 texture_filter = 1
-material = ExtResource("3_da1ci")
+material = ExtResource("4_hprpm")
 scale = Vector2(5, 5)
 speed_scale = 0.2
 centered = false
-script = ExtResource("4_m8aed")
 
 [node name="AnimationSelector" type="OptionButton" parent="."]
 layout_mode = 2
@@ -48,36 +46,10 @@ layout_mode = 2
 size_flags_horizontal = 3
 alignment = 1
 
-[node name="GifExportButton" type="Button" parent="Exports"]
+[node name="Button" parent="Exports" instance=ExtResource("7_8mw3h")]
 layout_mode = 2
-size_flags_horizontal = 0
-mouse_filter = 1
-text = "Export as GIF"
-script = ExtResource("4_chvjr")
-
-[node name="NativeFileDialog" type="NativeFileDialog" parent="Exports/GifExportButton"]
-title = "Save a GIF"
-access = 2
-
-[node name="GifExportButton2" type="Button" parent="Exports"]
-layout_mode = 2
-size_flags_horizontal = 0
-mouse_filter = 1
-text = "Export as WebP"
-script = ExtResource("4_chvjr")
-file_type = 1
-
-[node name="NativeFileDialog" type="NativeFileDialog" parent="Exports/GifExportButton2"]
-title = "Save a WebP"
-access = 2
-
-[node name="Button" parent="Exports" node_paths=PackedStringArray("sprite") instance=ExtResource("7_8mw3h")]
-layout_mode = 2
-sprite = NodePath("../../AnimationSpriteContol/Sprite")
 
 [node name="PanelContainer" type="PanelContainer" parent="."]
 layout_mode = 2
 
 [connection signal="item_selected" from="AnimationSelector" to="." method="_on_animation_selector_item_selected"]
-[connection signal="file_selected" from="Exports/GifExportButton/NativeFileDialog" to="Exports/GifExportButton" method="_on_native_file_dialog_file_selected"]
-[connection signal="file_selected" from="Exports/GifExportButton2/NativeFileDialog" to="Exports/GifExportButton2" method="_on_native_file_dialog_file_selected"]

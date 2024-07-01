@@ -28,8 +28,9 @@ func _resize_to_animation() -> void:
 		return
 	for idx in sprite_frames.get_frame_count(animation):
 		var frame = sprite_frames.get_frame_texture(animation, idx)
-		custom_minimum_size.x = maxf(custom_minimum_size.x, frame.get_width())
-		custom_minimum_size.y = maxf(custom_minimum_size.y, frame.get_height())
+		if is_instance_valid(frame):
+			custom_minimum_size.x = maxf(custom_minimum_size.x, frame.get_width())
+			custom_minimum_size.y = maxf(custom_minimum_size.y, frame.get_height())
 	custom_minimum_size *= sprite.scale
 
 func _reposition_frame() -> void:

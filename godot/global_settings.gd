@@ -5,14 +5,40 @@ var export_scale: int = 5 :
 		export_scale = value
 		export_setting_changed.emit()
 		setting_changed.emit()
+
 var export_outline_size: int = 1 :
 	set(value):
 		export_outline_size = value
 		export_setting_changed.emit()
 		setting_changed.emit()
+
 var export_outline_color: Color = Color.BLACK :
 	set(value):
 		export_outline_color = value
+		export_setting_changed.emit()
+		setting_changed.emit()
+
+var export_shadow_size: int = 5 :
+	set(value):
+		export_shadow_size = value
+		export_setting_changed.emit()
+		setting_changed.emit()
+		
+var export_shadow_color: Color = Color.BLACK :
+	set(value):
+		export_shadow_color = value
+		export_setting_changed.emit()
+		setting_changed.emit()
+
+var export_background_enabled: bool = true :
+	set(value):
+		export_background_enabled = value
+		export_setting_changed.emit()
+		setting_changed.emit()
+		
+var export_background_color: Color = Color.BLACK :
+	set(value):
+		export_background_color = value
 		export_setting_changed.emit()
 		setting_changed.emit()
 
@@ -45,6 +71,10 @@ func load_settings() -> void:
 	export_scale = data.get("exprot_scale", export_scale)
 	export_outline_size = data.get("export_outline_size", export_outline_size)
 	export_outline_color = Color.from_string(data.get("export_outline_color", export_outline_color.to_html(false)), export_outline_color)
+	export_shadow_size = data.get("export_shadow_size", export_shadow_size)
+	export_shadow_color = Color.from_string(data.get("export_shadow_color", export_shadow_color.to_html(false)), export_shadow_color)
+	export_background_enabled = data.get("export_background_enabled", export_background_enabled)
+	export_background_color = Color.from_string(data.get("export_background_color", export_background_color.to_html(false)), export_background_color)
 	last_save_location = data.get("last_save_location", last_save_location)
 
 func save_settings() -> void:
@@ -52,6 +82,10 @@ func save_settings() -> void:
 		"export_scale": export_scale,
 		"export_outline_size": export_outline_size,
 		"export_outline_color": export_outline_color.to_html(false),
+		"export_shadow_size": export_shadow_size,
+		"export_shadow_color": export_shadow_color.to_html(false),
+		"export_background_enabled": export_background_enabled,
+		"export_background_color": export_background_color.to_html(false),
 		"last_save_location": last_save_location,
 	}
 	

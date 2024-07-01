@@ -14,11 +14,11 @@ func _setup_sprite() -> void:
 	var sprite_frames := SpriteFrames.new()
 	if character.texture != null:
 		if character.texture.animated:
-			var frames = RotmgAtlases.get_animated_sprite_textures_export(character.texture.file_name, character.texture.index, true)
+			var frames = RotmgAtlases.get_animated_sprite_textures_export(character.texture.file_name, character.texture.index)
 			for frame in frames:
 				sprite_frames.add_frame("default", frame)
 		elif character.texture.texture != null:
-			sprite_frames.add_frame("default", RotmgAtlases.get_texture_export(character.texture.file_name, character.texture.index, true))
+			sprite_frames.add_frame("default", RotmgAtlases.get_texture_export(character.texture.file_name, character.texture.index))
 	else:
 		print("erm")
 	sprite.sprite_frames = sprite_frames

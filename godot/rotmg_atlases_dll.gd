@@ -1,18 +1,18 @@
 extends SpriteSheetDeserializer
 
-func get_animated_sprite_textures_export(sprite_sheet: String, index: int, default: bool = false) -> Array[Texture2D]:
-	var frames = get_animated_sprite_textures(sprite_sheet, index)
+func get_animated_sprite_textures_export(sprite_sheet: String, index: int) -> Array[Texture2D]:
+	var frames : Array[RotmgAnimatedTexture] = get_animated_textures(sprite_sheet, index)
 	
 	var out : Array[Texture2D] = []
 	
-	var outline_size := GlobalSettings.export_outline_size
-	var export_scale := GlobalSettings.export_scale
-	if default:
-		outline_size = 1
-		export_scale = 5
+	var outline_size := 1
+	var export_scale := 5
 	
 	for frame in frames:
-		var tex : AtlasTexture = frame.duplicate()
+		if !is_instance_valid(frame.texture) || !is_instance_valid(frame.texture.texture):
+			push_error("Invalid texture!")
+			continue
+		var tex : AtlasTexture = frame.texture.texture.duplicate()
 		if outline_size != 0:
 			tex.region.position.x -= ceilf(float(outline_size) / export_scale)
 			tex.region.position.y -= ceilf(float(outline_size) / export_scale)
@@ -22,13 +22,14 @@ func get_animated_sprite_textures_export(sprite_sheet: String, index: int, defau
 	
 	return out
 
-func get_texture_export(sprite_sheet: String, index: int, default: bool = false) -> AtlasTexture:
-	var tex : AtlasTexture = get_texture(sprite_sheet, index)
-	var outline_size := GlobalSettings.export_outline_size
-	var export_scale := GlobalSettings.export_scale
-	if default:
-		outline_size = 1
-		export_scale = 5
+func get_texture_export(sprite_sheet: String, index: int) -> AtlasTexture:
+	var rotmg_texture : RotmgTexture = get_texture(sprite_sheet, index)
+	if !is_instance_valid(rotmg_texture) || !is_instance_valid(rotmg_texture.texture):
+			push_error("Invalid texture!")
+			return null
+	var tex := rotmg_texture.texture
+	var outline_size := 1
+	var export_scale := 5
 	if outline_size != 0:
 		tex.region.position.x -= ceilf(float(outline_size) / export_scale)
 		tex.region.position.y -= ceilf(float(outline_size) / export_scale)

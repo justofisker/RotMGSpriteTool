@@ -4,10 +4,7 @@
 
 [node name="Button" type="Button"]
 size_flags_horizontal = 4
-text = "Export as PNG(s)"
+text = "Export"
 script = ExtResource("1_tf0aj")
 
-[node name="NativeFileDialog" type="NativeFileDialog" parent="."]
-access = 2
-
-[connection signal="file_selected" from="NativeFileDialog" to="." method="_on_dialog_file_selected"]
+[connection signal="pressed" from="." to="." method="_on_pressed"]

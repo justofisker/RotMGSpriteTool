@@ -1,7 +1,6 @@
-use std::ops::Deref;
-
-use godot::classes::{AnimatedSprite2D, INode, Node};
-use godot::engine::{AtlasTexture, FileAccess, Image, ImageTexture, SpriteFrames, Texture2D};
+use godot::classes::{INode, Node};
+use godot::engine::{AtlasTexture, FileAccess, Image, ImageTexture, Texture2D};
+use godot::global::push_warning;
 use godot::prelude::*;
 
 extern crate flatbuffers;
@@ -38,20 +37,26 @@ impl INode for SpriteSheetDeserializer {
     }
 
     fn ready(&mut self) {
-        fn load_img(file_path: &str) -> Option<Gd<Texture2D>> {
-            if FileAccess::file_exists(file_path.into()) {
-                let mut img = Image::new_gd();
-                img.load(file_path.into());
-                Some(ImageTexture::create_from_image(img).unwrap().upcast())
-            } else {
-                godot_error!("Failed to load image file: {}", file_path);
-                None
+        if godot::classes::Os::singleton().has_feature("editor".into()) {
+            self.map_objects = Some(load("res://assets/atlases/mapObjects.png"));
+            self.ground_tiles = Some(load("res://assets/atlases/groundTiles.png"));
+            self.characters = Some(load("res://assets/atlases/characters.png"));
+        } else {
+            fn load_img(file_path: &str) -> Option<Gd<Texture2D>> {
+                if FileAccess::file_exists(file_path.into()) {
+                    let mut img = Image::new_gd();
+                    img.load(file_path.into());
+                    Some(ImageTexture::create_from_image(img).unwrap().upcast())
+                } else {
+                    godot_error!("Failed to load image file: {}", file_path);
+                    None
+                }
             }
-        }
 
-        self.map_objects = load_img("res://assets/atlases/mapObjects.png");
-        self.ground_tiles = load_img("res://assets/atlases/groundTiles.png");
-        self.characters = load_img("res://assets/atlases/characters.png");
+            self.map_objects = load_img("res://assets/atlases/mapObjects.png");
+            self.ground_tiles = load_img("res://assets/atlases/groundTiles.png");
+            self.characters = load_img("res://assets/atlases/characters.png");
+        }
 
         let spritesheef_path = "res://assets/atlases/spritesheetf";
         if FileAccess::file_exists(spritesheef_path.into()) {
@@ -74,7 +79,7 @@ impl INode for SpriteSheetDeserializer {
 
 #[godot_api]
 impl SpriteSheetDeserializer {
-    fn get_atlas_texture(&self, atlas_id: u64, region: &Position) -> Option<Gd<AtlasTexture>> {
+    fn create_atlas_texture(&self, atlas_id: u64, region: &Position) -> Option<Gd<AtlasTexture>> {
         let mut atlas_texture = AtlasTexture::new_gd();
         atlas_texture.set_region(Rect2 {
             position: Vector2 {
@@ -116,29 +121,43 @@ impl SpriteSheetDeserializer {
     }
 
     #[func]
-    fn get_animated_sprite_textures(&self, sprite_sheet: String, index: u16) -> VariantArray {
-        let mut array = VariantArray::new();
+    fn get_animated_textures(
+        &self,
+        &sprite_sheet: String,
+        index: u16,
+    ) -> Array<Gd<RotmgAnimatedTexture>> {
+        let mut array = Array::new();
 
         for sprite in &self.animated_sprites {
-            if sprite.sprite_sheet_name.eq_ignore_ascii_case(&sprite_sheet) && sprite.index == index
-            {
-                array.push(
-                    self.get_atlas_texture(sprite.sprite.a_id, &sprite.sprite.position)
-                        .to_variant(),
-                );
+            if sprite.sprite_sheet_name.eq_ignore_ascii_case(&sprite_sheet) && sprite.index == index {
+                array.push(Gd::from_object(RotmgAnimatedTexture{
+                    set: sprite.set,
+                    direction: sprite.direction,
+                    action: sprite.action,
+                    texture: Some(Gd::from_object(RotmgTexture {
+                        padding: sprite.sprite.padding,
+                        texture: self.create_atlas_texture(sprite.sprite.a_id, &sprite.sprite.position),
+                    })),
+                }));
             }
         }
 
-        return array;
+        array
     }
 
     #[func]
-    fn get_texture(&self, sheet_name: String, index: u16) -> Option<Gd<AtlasTexture>> {
+    fn get_texture(&self, sheet_name: String, index: u16) -> Option<Gd<RotmgTexture>> {
         for sheet in &self.sprite_sheets {
             if sheet.sprite_sheet_name.eq_ignore_ascii_case(&sheet_name) {
                 for sprite in &sheet.sprites {
                     if sprite.index == index {
-                        return self.get_atlas_texture(sprite.a_id, &sprite.position);
+                        if let Some(tex) = self.create_atlas_texture(sprite.a_id, &sprite.position) {
+                            return Some(Gd::from_object(RotmgTexture {
+                                padding: sprite.padding,
+                                texture: Some(tex)
+                            }));
+                        }
+                        return None;
                     }
                 }
                 break;
@@ -162,6 +181,28 @@ impl SpriteSheetDeserializer {
     fn get_atlas_ground_tiles(&self) -> Option<Gd<Texture2D>> {
         return self.ground_tiles.clone();
     }
+}
+
+#[derive(GodotClass)]
+#[class(no_init)]
+struct RotmgAnimatedTexture {
+    #[var]
+    set: u16,
+    #[var]
+    direction: u16,
+    #[var]
+    action: u16,
+    #[var]
+    texture: Option<Gd<RotmgTexture>>,
+}
+
+#[derive(GodotClass)]
+#[class(no_init)]
+struct RotmgTexture {
+    #[var]
+    padding: u16,
+    #[var]
+    texture: Option<Gd<AtlasTexture>>,
 }
 
 #[derive(Default)]

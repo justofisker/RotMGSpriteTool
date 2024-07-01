@@ -1,10 +1,9 @@
-[gd_scene load_steps=8 format=3 uid="uid://di3w2cukl2ajp"]
+[gd_scene load_steps=7 format=3 uid="uid://di3w2cukl2ajp"]
 
 [ext_resource type="Script" path="res://sidebar/animated_sprite_container.gd" id="1_8p4l2"]
 [ext_resource type="Script" path="res://sidebar/alt_textures.gd" id="1_a6krb"]
 [ext_resource type="PackedScene" uid="uid://byt5pp40l3fs1" path="res://sidebar/divider.tscn" id="2_8w3wk"]
-[ext_resource type="Material" uid="uid://du4id8y1i8pqb" path="res://sidebar/outline_preview_material.tres" id="4_26s8f"]
-[ext_resource type="Script" path="res://sidebar/sprite_preview.gd" id="5_n631x"]
+[ext_resource type="Material" uid="uid://bud36ywkxwv5b" path="res://character_list/outline_material.tres" id="4_jd06g"]
 [ext_resource type="PackedScene" uid="uid://c3rbedxxbop6j" path="res://sidebar/save_pngs_button.tscn" id="6_rbp3w"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_6nouk"]
@@ -33,11 +32,10 @@ script = ExtResource("1_8p4l2")
 [node name="Sprite" type="AnimatedSprite2D" parent="AltTextureControl"]
 unique_name_in_owner = true
 texture_filter = 1
-material = ExtResource("4_26s8f")
+material = ExtResource("4_jd06g")
 scale = Vector2(5, 5)
 sprite_frames = SubResource("SpriteFrames_6nouk")
 centered = false
-script = ExtResource("5_n631x")
 
 [node name="Label" type="Label" parent="."]
 layout_mode = 2
@@ -49,8 +47,7 @@ layout_mode = 2
 tick_count = 6
 ticks_on_borders = true
 
-[node name="Button" parent="." node_paths=PackedStringArray("sprite") instance=ExtResource("6_rbp3w")]
+[node name="Button" parent="." instance=ExtResource("6_rbp3w")]
 layout_mode = 2
-sprite = NodePath("../AltTextureControl/Sprite")
 
 [connection signal="value_changed" from="HSlider" to="." method="_on_alt_tex_value_changed"]

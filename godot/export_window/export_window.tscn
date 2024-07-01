@@ -1,0 +1,19 @@
+[gd_scene load_steps=3 format=3 uid="uid://cm6bp6gbwr0k0"]
+
+[ext_resource type="Script" path="res://export_window/export_window.gd" id="1_juyhe"]
+[ext_resource type="PackedScene" uid="uid://c81u2aux06578" path="res://export_window/export_window_content.tscn" id="1_utirs"]
+
+[node name="ExportWindow" type="Window" groups=["export_window"]]
+disable_3d = true
+title = "Export"
+initial_position = 2
+size = Vector2i(1000, 450)
+transient = true
+exclusive = true
+min_size = Vector2i(1000, 450)
+keep_title_visible = true
+script = ExtResource("1_juyhe")
+
+[node name="ExportWindowContent" parent="." instance=ExtResource("1_utirs")]
+
+[connection signal="close_requested" from="." to="." method="_on_close_requested"]

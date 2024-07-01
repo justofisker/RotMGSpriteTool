@@ -1,0 +1,183 @@
+[gd_scene load_steps=5 format=3 uid="uid://c81u2aux06578"]
+
+[ext_resource type="Script" path="res://export_window/export_window_content.gd" id="1_c1vah"]
+[ext_resource type="PackedScene" uid="uid://cqnb17c1naiw" path="res://export_window/export_preview.tscn" id="1_o2hr6"]
+[ext_resource type="Script" path="res://export_window/export_settings.gd" id="4_owj0q"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_q1af2"]
+font_size = 24
+
+[node name="ExportWindowContent" type="HBoxContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 0
+script = ExtResource("1_c1vah")
+
+[node name="Control" type="SubViewportContainer" parent="."]
+layout_mode = 2
+size_flags_horizontal = 3
+stretch = true
+
+[node name="SubViewport" type="SubViewport" parent="Control"]
+handle_input_locally = false
+size = Vector2i(832, 648)
+render_target_update_mode = 4
+
+[node name="ExportPreview" parent="Control/SubViewport" instance=ExtResource("1_o2hr6")]
+
+[node name="ExportOptions" type="Panel" parent="."]
+custom_minimum_size = Vector2(320, 0)
+layout_mode = 2
+
+[node name="ExportSettings" type="Node" parent="ExportOptions" node_paths=PackedStringArray("scale_spin", "outline_size_spin", "outline_color", "export_style", "shadow_size_spin", "shadow_color", "background_checkbutton", "background_color")]
+script = ExtResource("4_owj0q")
+scale_spin = NodePath("../MarginContainer/VBoxContainer/SpriteScale/SpinBox")
+outline_size_spin = NodePath("../MarginContainer/VBoxContainer/OutlineSize/SpinBox")
+outline_color = NodePath("../MarginContainer/VBoxContainer/OutlineColor/ColorPickerButton")
+export_style = NodePath("../MarginContainer/VBoxContainer/LayoutStyle/OptionButton")
+shadow_size_spin = NodePath("../MarginContainer/VBoxContainer/ShadowSize/SpinBox")
+shadow_color = NodePath("../MarginContainer/VBoxContainer/ShadowColor/ColorPickerButton")
+background_checkbutton = NodePath("../MarginContainer/VBoxContainer/Background/CheckButton")
+background_color = NodePath("../MarginContainer/VBoxContainer/Background/ColorPickerButton")
+
+[node name="MarginContainer" type="MarginContainer" parent="ExportOptions"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="VBoxContainer" type="VBoxContainer" parent="ExportOptions/MarginContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="ExportOptions/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Export Options"
+label_settings = SubResource("LabelSettings_q1af2")
+
+[node name="SpriteScale" type="HBoxContainer" parent="ExportOptions/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="ExportOptions/MarginContainer/VBoxContainer/SpriteScale"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Sprite Scale"
+
+[node name="SpinBox" type="SpinBox" parent="ExportOptions/MarginContainer/VBoxContainer/SpriteScale"]
+layout_mode = 2
+min_value = 1.0
+max_value = 10.0
+value = 5.0
+suffix = "x"
+
+[node name="OutlineSize" type="HBoxContainer" parent="ExportOptions/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="ExportOptions/MarginContainer/VBoxContainer/OutlineSize"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Outline Size"
+
+[node name="SpinBox" type="SpinBox" parent="ExportOptions/MarginContainer/VBoxContainer/OutlineSize"]
+layout_mode = 2
+max_value = 5.0
+value = 1.0
+suffix = "px"
+
+[node name="OutlineColor" type="HBoxContainer" parent="ExportOptions/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="ExportOptions/MarginContainer/VBoxContainer/OutlineColor"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Outline Color"
+
+[node name="ColorPickerButton" type="ColorPickerButton" parent="ExportOptions/MarginContainer/VBoxContainer/OutlineColor"]
+custom_minimum_size = Vector2(23, 0)
+layout_mode = 2
+
+[node name="ShadowSize" type="HBoxContainer" parent="ExportOptions/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="ExportOptions/MarginContainer/VBoxContainer/ShadowSize"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Shadow Size"
+
+[node name="SpinBox" type="SpinBox" parent="ExportOptions/MarginContainer/VBoxContainer/ShadowSize"]
+layout_mode = 2
+max_value = 8.0
+value = 6.0
+suffix = "px"
+
+[node name="ShadowColor" type="HBoxContainer" parent="ExportOptions/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="ExportOptions/MarginContainer/VBoxContainer/ShadowColor"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Shadow Color"
+
+[node name="ColorPickerButton" type="ColorPickerButton" parent="ExportOptions/MarginContainer/VBoxContainer/ShadowColor"]
+custom_minimum_size = Vector2(23, 0)
+layout_mode = 2
+
+[node name="LayoutStyle" type="HBoxContainer" parent="ExportOptions/MarginContainer/VBoxContainer"]
+visible = false
+layout_mode = 2
+
+[node name="Label" type="Label" parent="ExportOptions/MarginContainer/VBoxContainer/LayoutStyle"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Layout Style"
+
+[node name="OptionButton" type="OptionButton" parent="ExportOptions/MarginContainer/VBoxContainer/LayoutStyle"]
+layout_mode = 2
+
+[node name="Background" type="HBoxContainer" parent="ExportOptions/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="ExportOptions/MarginContainer/VBoxContainer/Background"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Background"
+
+[node name="CheckButton" type="CheckButton" parent="ExportOptions/MarginContainer/VBoxContainer/Background"]
+layout_mode = 2
+
+[node name="ColorPickerButton" type="ColorPickerButton" parent="ExportOptions/MarginContainer/VBoxContainer/Background"]
+custom_minimum_size = Vector2(23, 0)
+layout_mode = 2
+color = Color(0.512536, 0.50284, 1, 1)
+
+[node name="ExportButtons" type="HFlowContainer" parent="ExportOptions/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="PNG" type="Button" parent="ExportOptions/MarginContainer/VBoxContainer/ExportButtons"]
+layout_mode = 2
+text = "Export as PNG"
+
+[node name="WebP" type="Button" parent="ExportOptions/MarginContainer/VBoxContainer/ExportButtons"]
+layout_mode = 2
+text = "Export as Animted WebP"
+
+[node name="GIF" type="Button" parent="ExportOptions/MarginContainer/VBoxContainer/ExportButtons"]
+layout_mode = 2
+text = "Export as Animated GIF"
+
+[connection signal="value_changed" from="ExportOptions/MarginContainer/VBoxContainer/SpriteScale/SpinBox" to="ExportOptions/ExportSettings" method="_on_sprite_scale_value_changed"]
+[connection signal="value_changed" from="ExportOptions/MarginContainer/VBoxContainer/OutlineSize/SpinBox" to="ExportOptions/ExportSettings" method="_on_outline_size_value_changed"]
+[connection signal="color_changed" from="ExportOptions/MarginContainer/VBoxContainer/OutlineColor/ColorPickerButton" to="ExportOptions/ExportSettings" method="_on_outline_color_changed"]
+[connection signal="value_changed" from="ExportOptions/MarginContainer/VBoxContainer/ShadowSize/SpinBox" to="ExportOptions/ExportSettings" method="_on_shadow_size_value_changed"]
+[connection signal="color_changed" from="ExportOptions/MarginContainer/VBoxContainer/ShadowColor/ColorPickerButton" to="ExportOptions/ExportSettings" method="_on_shadow_color_changed"]
+[connection signal="item_selected" from="ExportOptions/MarginContainer/VBoxContainer/LayoutStyle/OptionButton" to="ExportOptions/ExportSettings" method="_on_layout_style_selected"]
+[connection signal="toggled" from="ExportOptions/MarginContainer/VBoxContainer/Background/CheckButton" to="ExportOptions/ExportSettings" method="_on_background_toggled"]
+[connection signal="color_changed" from="ExportOptions/MarginContainer/VBoxContainer/Background/ColorPickerButton" to="ExportOptions/ExportSettings" method="_on_background_color_changed"]

@@ -3,7 +3,7 @@ class_name TextureXml extends Resource
 var file_name: String
 var index: int
 var animated: bool
-var texture: Texture2D :
+var texture: RotmgTexture :
 	get:
 		if is_instance_valid(texture):
 			return texture

@@ -1,9 +1,7 @@
 extends Control
 
 @export var animation_selector: OptionButton
-
-func _ready() -> void:
-	GlobalSettings.export_setting_changed.connect(_add_frames)
+@export var export_button: Button
 
 var character: Character :
 	set(value):
@@ -47,3 +45,7 @@ func _add_frames() -> void:
 
 func _on_animation_selector_item_selected(index: int) -> void:
 	%Sprite.play(animation_selector.get_item_text(index))
+	var textures : Array[RotmgTexture] = []
+	for frame in character.animations[index].frames:
+		textures.append(RotmgAtlases.get_texture(frame.file_name, frame.index))
+	export_button.export_data = ExportData.from_texture_time_array(textures, character.animations[index].frame_durations)
