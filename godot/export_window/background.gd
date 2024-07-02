@@ -9,5 +9,5 @@ func _on_setting_changed() -> void:
 		color.a = 0
 
 func _process(_delta: float) -> void:
-	size = get_viewport().size
+	size = get_viewport().size * 2
 	position = -size / 2.0
