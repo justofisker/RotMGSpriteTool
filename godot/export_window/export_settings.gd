@@ -3,7 +3,6 @@ extends Node
 @export var scale_spin: SpinBox
 @export var outline_size_spin: SpinBox
 @export var outline_color: ColorPickerButton
-@export var export_style: OptionButton
 @export var shadow_size_spin: SpinBox
 @export var shadow_color: ColorPickerButton
 @export var background_checkbutton: CheckButton
