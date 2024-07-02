@@ -49,45 +49,48 @@ func _on_dialog_file_selected(path: String) -> void:
 		base_viewport.add_child(dup_container)
 		sprites.push_back(dup_container.get_child(0))
 	
-	var frame_timestamps: Array = []
-	var viewports: Array[Viewport] = []
-	var viewport_timestamps_ms : PackedInt32Array = []
+	var frame_timestamps_ms: Array[PackedInt32Array] = []
 	var max_duration : int = 0
 	
 	for sprite in sprites:
-		var times : PackedInt32Array = []
-		var animation_length: = 0
+		var timestamps_ms : PackedInt32Array = []
+		var animation_length_ms: = 0
 		for frame_idx in sprite.sprite_frames.get_frame_count("default"):
-			var frame_time := int(sprite.sprite_frames.get_frame_duration("default", frame_idx) * 1000)
-			times.push_back(animation_length + frame_time)
-			animation_length += frame_time
-		frame_timestamps.push_back(times)
-		max_duration = maxi(max_duration, animation_length)
+			animation_length_ms += roundi(sprite.sprite_frames.get_frame_duration("default", frame_idx) * 1000)
+			if frame_idx + 1 != sprite.sprite_frames.get_frame_count("default"):
+				timestamps_ms.push_back(animation_length_ms)
+		frame_timestamps_ms.push_back(timestamps_ms)
+		max_duration = maxi(max_duration, animation_length_ms)
 	
 	for sprite in sprites:
 		sprite.set_frame_and_progress(0, 0.0)
 	
-	var first_vp = base_viewport.duplicate()
-	viewports.push_back(first_vp)
-	add_child(first_vp)
+	var viewports: Array[Viewport] = []
+	var viewport_timestamps_ms : PackedInt32Array = []
+	
+	var first_frame_viewport := base_viewport.duplicate()
+	add_child(first_frame_viewport)
+	viewports.push_back(first_frame_viewport)
 	viewport_timestamps_ms.push_back(0)
 	
-	var current_time := 0
+	var current_time_ms := 0
 	var current_frames : PackedInt32Array = []
 	current_frames.resize(sprites.size())
 	current_frames.fill(0)
-	while current_time < max_duration:
+	while true:
 		var update_indices := []
-		var min_frame_timestamp: int = 9223372036854775807 # max int
+		var min_timestamp_ms: int = 9223372036854775807 # max int
 		for idx in current_frames.size():
-			if current_frames[idx] >= sprites[idx].sprite_frames.get_frame_count("default"):
+			if frame_timestamps_ms[idx].size() == 0 || current_frames[idx] + 1 >= sprites[idx].sprite_frames.get_frame_count("default"):
 				continue
-			var timestamp = frame_timestamps[idx][current_frames[idx]]
-			if timestamp < min_frame_timestamp:
+			var timestamp = frame_timestamps_ms[idx][current_frames[idx]]
+			if timestamp < min_timestamp_ms:
 				update_indices = [ idx ]
-				min_frame_timestamp = timestamp
-			elif timestamp == min_frame_timestamp:
+				min_timestamp_ms = timestamp
+			elif absi(timestamp - min_timestamp_ms) <= 1: # 999 and 1000 are basically the same thing
 				update_indices.append(idx)
+		if update_indices.size() == 0:
+			break
 		
 		for idx in update_indices:
 			current_frames[idx] += 1
@@ -96,9 +99,10 @@ func _on_dialog_file_selected(path: String) -> void:
 		var viewport = base_viewport.duplicate()
 		add_child(viewport)
 		viewports.push_back(viewport)
-		viewport_timestamps_ms.push_back(min_frame_timestamp)
-		
-		current_time = min_frame_timestamp 
+		viewport_timestamps_ms.push_back(min_timestamp_ms)
+		current_time_ms = min_timestamp_ms 
+	
+	viewport_timestamps_ms.push_back(max_duration)
 	
 	await RenderingServer.frame_post_draw
 	
@@ -117,9 +121,9 @@ func _on_dialog_file_selected(path: String) -> void:
 		for idx in viewports.size():
 			var img := viewports[idx].get_texture().get_image()
 			img.convert(Image.FORMAT_RGBA8)
-			exporter.add_frame(img, (viewport_timestamps_ms[idx] - last_timestamp) / 1000.0, MediumCutQuantization)
-			last_timestamp = viewport_timestamps_ms[idx]
+			exporter.add_frame(img, (viewport_timestamps_ms[idx + 1] - viewport_timestamps_ms[idx]) / 1000.0, MediumCutQuantization)
 			remove_child(viewports[idx])
+
 		
 		var file := FileAccess.open(path, FileAccess.WRITE)
 		file.store_buffer(exporter.export_file_data())
