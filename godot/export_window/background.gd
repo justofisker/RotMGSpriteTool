@@ -1,9 +1,9 @@
 extends ColorRect
 
 func _ready() -> void:
-	GlobalSettings.export_setting_changed.connect(_on_export_setting_changed)
+	GlobalSettings.setting_changed.connect(_on_setting_changed)
 
-func _on_export_setting_changed() -> void:
+func _on_setting_changed() -> void:
 	color = GlobalSettings.export_background_color
 	if !GlobalSettings.export_background_enabled:
 		color.a = 0

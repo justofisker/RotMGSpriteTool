@@ -4,7 +4,7 @@
 [ext_resource type="Script" path="res://sidebar/animated_sprite_container.gd" id="1_l3m8r"]
 [ext_resource type="PackedScene" uid="uid://byt5pp40l3fs1" path="res://sidebar/divider.tscn" id="2_kw6a4"]
 [ext_resource type="Material" uid="uid://bud36ywkxwv5b" path="res://character_list/outline_material.tres" id="4_hprpm"]
-[ext_resource type="PackedScene" uid="uid://c3rbedxxbop6j" path="res://sidebar/save_pngs_button.tscn" id="7_8mw3h"]
+[ext_resource type="PackedScene" uid="uid://c3rbedxxbop6j" path="res://sidebar/export_button.tscn" id="7_8mw3h"]
 
 [node name="CharacterAnimations" type="VBoxContainer" node_paths=PackedStringArray("animation_selector", "export_button")]
 offset_right = 379.0

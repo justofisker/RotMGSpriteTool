@@ -4,7 +4,7 @@
 
 [sub_resource type="Gradient" id="Gradient_hkib8"]
 interpolation_mode = 2
-colors = PackedColorArray(0, 0, 0, 0.352941, 0, 0, 0, 0)
+colors = PackedColorArray(0, 0, 0, 0.137255, 0, 0, 0, 0)
 
 [sub_resource type="GradientTexture1D" id="GradientTexture1D_if252"]
 gradient = SubResource("Gradient_hkib8")

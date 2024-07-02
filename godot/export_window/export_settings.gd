@@ -8,6 +8,7 @@ extends Node
 @export var shadow_color: ColorPickerButton
 @export var background_checkbutton: CheckButton
 @export var background_color: ColorPickerButton
+@export var animated_checkbutton: CheckButton
 
 func _ready() -> void:
 	scale_spin.value = GlobalSettings.export_scale
@@ -17,6 +18,7 @@ func _ready() -> void:
 	shadow_color.color = GlobalSettings.export_shadow_color
 	background_checkbutton.button_pressed = GlobalSettings.export_background_enabled
 	background_color.color = GlobalSettings.export_background_color
+	animated_checkbutton.button_pressed = GlobalSettings.export_animated
 
 func _on_sprite_scale_value_changed(value: float) -> void:
 	GlobalSettings.export_scale = int(value)
@@ -41,3 +43,6 @@ func _on_background_toggled(toggled_on: bool) -> void:
 
 func _on_background_color_changed(color: Color) -> void:
 	GlobalSettings.export_background_color = color
+
+func _on_animated_toggled(toggled_on: bool) -> void:
+	GlobalSettings.export_animated = toggled_on

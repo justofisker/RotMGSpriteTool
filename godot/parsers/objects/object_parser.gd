@@ -50,6 +50,10 @@ func parse_objects(path: String) -> Array[Character]:
 					chars.append(c)
 				"InteractiveInfoObject":
 					pass
+				"Container":
+					pass
+				"":
+					pass
 				_:
 					print(id)
 					push_warning("Unknown object class: ", object_class)

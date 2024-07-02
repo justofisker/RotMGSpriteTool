@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://c8xoealrtv7p4"]
+[gd_scene load_steps=12 format=3 uid="uid://c8xoealrtv7p4"]
 
 [ext_resource type="Script" path="res://sidebar/sidebar.gd" id="1_4c023"]
 [ext_resource type="Script" path="res://addons/SmoothScroll/SmoothScrollContainer.gd" id="2_qhpb7"]
@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://b1fp7rgxaera8" path="res://sidebar/character_animations.tscn" id="4_meb24"]
 [ext_resource type="PackedScene" uid="uid://di3w2cukl2ajp" path="res://sidebar/alt_textures.tscn" id="5_7pihy"]
 [ext_resource type="PackedScene" uid="uid://cfdqab6g5ibvq" path="res://sidebar/sprite_view.tscn" id="5_23nd3"]
+[ext_resource type="Script" path="res://sidebar/about_button.gd" id="8_5ksub"]
 [ext_resource type="Script" path="res://open_diff_xml.gd" id="8_yg0d1"]
 
 [sub_resource type="Resource" id="Resource_rn8v4"]
@@ -90,10 +91,20 @@ theme_override_constants/margin_top = 8
 theme_override_constants/margin_right = 8
 theme_override_constants/margin_bottom = 8
 
-[node name="Button" type="Button" parent="VBoxContainer/PanelContainer/MarginContainer"]
+[node name="DifferentXML" type="Button" parent="VBoxContainer/PanelContainer/MarginContainer"]
 layout_mode = 2
 size_flags_horizontal = 8
 size_flags_vertical = 0
 mouse_filter = 1
 text = "Choose Different File"
 script = ExtResource("8_yg0d1")
+
+[node name="About" type="Button" parent="VBoxContainer/PanelContainer/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+mouse_filter = 1
+text = "About"
+script = ExtResource("8_5ksub")
+
+[connection signal="pressed" from="VBoxContainer/PanelContainer/MarginContainer/About" to="VBoxContainer/PanelContainer/MarginContainer/About" method="_on_pressed"]

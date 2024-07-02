@@ -1,8 +1,10 @@
-[gd_scene load_steps=5 format=3 uid="uid://c81u2aux06578"]
+[gd_scene load_steps=7 format=3 uid="uid://c81u2aux06578"]
 
 [ext_resource type="Script" path="res://export_window/export_window_content.gd" id="1_c1vah"]
 [ext_resource type="PackedScene" uid="uid://cqnb17c1naiw" path="res://export_window/export_preview.tscn" id="1_o2hr6"]
+[ext_resource type="Script" path="res://export_window/export_png.gd" id="4_mguji"]
 [ext_resource type="Script" path="res://export_window/export_settings.gd" id="4_owj0q"]
+[ext_resource type="Script" path="res://export_window/export_animated.gd" id="5_p5lyh"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_q1af2"]
 font_size = 24
@@ -27,21 +29,22 @@ size = Vector2i(832, 648)
 render_target_update_mode = 4
 
 [node name="ExportPreview" parent="Control/SubViewport" instance=ExtResource("1_o2hr6")]
+unique_name_in_owner = true
 
 [node name="ExportOptions" type="Panel" parent="."]
 custom_minimum_size = Vector2(320, 0)
 layout_mode = 2
 
-[node name="ExportSettings" type="Node" parent="ExportOptions" node_paths=PackedStringArray("scale_spin", "outline_size_spin", "outline_color", "export_style", "shadow_size_spin", "shadow_color", "background_checkbutton", "background_color")]
+[node name="ExportSettings" type="Node" parent="ExportOptions" node_paths=PackedStringArray("scale_spin", "outline_size_spin", "outline_color", "shadow_size_spin", "shadow_color", "background_checkbutton", "background_color", "animated_checkbutton")]
 script = ExtResource("4_owj0q")
 scale_spin = NodePath("../MarginContainer/VBoxContainer/SpriteScale/SpinBox")
 outline_size_spin = NodePath("../MarginContainer/VBoxContainer/OutlineSize/SpinBox")
 outline_color = NodePath("../MarginContainer/VBoxContainer/OutlineColor/ColorPickerButton")
-export_style = NodePath("../MarginContainer/VBoxContainer/LayoutStyle/OptionButton")
 shadow_size_spin = NodePath("../MarginContainer/VBoxContainer/ShadowSize/SpinBox")
 shadow_color = NodePath("../MarginContainer/VBoxContainer/ShadowColor/ColorPickerButton")
 background_checkbutton = NodePath("../MarginContainer/VBoxContainer/Background/CheckButton")
 background_color = NodePath("../MarginContainer/VBoxContainer/Background/ColorPickerButton")
+animated_checkbutton = NodePath("../MarginContainer/VBoxContainer/Animated/CheckButton")
 
 [node name="MarginContainer" type="MarginContainer" parent="ExportOptions"]
 layout_mode = 1
@@ -130,18 +133,6 @@ text = "Shadow Color"
 custom_minimum_size = Vector2(23, 0)
 layout_mode = 2
 
-[node name="LayoutStyle" type="HBoxContainer" parent="ExportOptions/MarginContainer/VBoxContainer"]
-visible = false
-layout_mode = 2
-
-[node name="Label" type="Label" parent="ExportOptions/MarginContainer/VBoxContainer/LayoutStyle"]
-layout_mode = 2
-size_flags_horizontal = 3
-text = "Layout Style"
-
-[node name="OptionButton" type="OptionButton" parent="ExportOptions/MarginContainer/VBoxContainer/LayoutStyle"]
-layout_mode = 2
-
 [node name="Background" type="HBoxContainer" parent="ExportOptions/MarginContainer/VBoxContainer"]
 layout_mode = 2
 
@@ -158,26 +149,58 @@ custom_minimum_size = Vector2(23, 0)
 layout_mode = 2
 color = Color(0.512536, 0.50284, 1, 1)
 
+[node name="Animated" type="HBoxContainer" parent="ExportOptions/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="ExportOptions/MarginContainer/VBoxContainer/Animated"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Animated"
+
+[node name="CheckButton" type="CheckButton" parent="ExportOptions/MarginContainer/VBoxContainer/Animated"]
+layout_mode = 2
+
 [node name="ExportButtons" type="HFlowContainer" parent="ExportOptions/MarginContainer/VBoxContainer"]
 layout_mode = 2
 
 [node name="PNG" type="Button" parent="ExportOptions/MarginContainer/VBoxContainer/ExportButtons"]
 layout_mode = 2
 text = "Export as PNG"
+script = ExtResource("4_mguji")
+
+[node name="NativeFileDialog" type="NativeFileDialog" parent="ExportOptions/MarginContainer/VBoxContainer/ExportButtons/PNG"]
+access = 2
 
 [node name="WebP" type="Button" parent="ExportOptions/MarginContainer/VBoxContainer/ExportButtons"]
+visible = false
 layout_mode = 2
-text = "Export as Animted WebP"
+text = "Export as Animated WebP"
+script = ExtResource("5_p5lyh")
+
+[node name="NativeFileDialog" type="NativeFileDialog" parent="ExportOptions/MarginContainer/VBoxContainer/ExportButtons/WebP"]
+access = 2
 
 [node name="GIF" type="Button" parent="ExportOptions/MarginContainer/VBoxContainer/ExportButtons"]
+visible = false
 layout_mode = 2
 text = "Export as Animated GIF"
+script = ExtResource("5_p5lyh")
+export_type = 1
+
+[node name="NativeFileDialog" type="NativeFileDialog" parent="ExportOptions/MarginContainer/VBoxContainer/ExportButtons/GIF"]
+access = 2
 
 [connection signal="value_changed" from="ExportOptions/MarginContainer/VBoxContainer/SpriteScale/SpinBox" to="ExportOptions/ExportSettings" method="_on_sprite_scale_value_changed"]
 [connection signal="value_changed" from="ExportOptions/MarginContainer/VBoxContainer/OutlineSize/SpinBox" to="ExportOptions/ExportSettings" method="_on_outline_size_value_changed"]
 [connection signal="color_changed" from="ExportOptions/MarginContainer/VBoxContainer/OutlineColor/ColorPickerButton" to="ExportOptions/ExportSettings" method="_on_outline_color_changed"]
 [connection signal="value_changed" from="ExportOptions/MarginContainer/VBoxContainer/ShadowSize/SpinBox" to="ExportOptions/ExportSettings" method="_on_shadow_size_value_changed"]
 [connection signal="color_changed" from="ExportOptions/MarginContainer/VBoxContainer/ShadowColor/ColorPickerButton" to="ExportOptions/ExportSettings" method="_on_shadow_color_changed"]
-[connection signal="item_selected" from="ExportOptions/MarginContainer/VBoxContainer/LayoutStyle/OptionButton" to="ExportOptions/ExportSettings" method="_on_layout_style_selected"]
 [connection signal="toggled" from="ExportOptions/MarginContainer/VBoxContainer/Background/CheckButton" to="ExportOptions/ExportSettings" method="_on_background_toggled"]
 [connection signal="color_changed" from="ExportOptions/MarginContainer/VBoxContainer/Background/ColorPickerButton" to="ExportOptions/ExportSettings" method="_on_background_color_changed"]
+[connection signal="toggled" from="ExportOptions/MarginContainer/VBoxContainer/Animated/CheckButton" to="ExportOptions/ExportSettings" method="_on_animated_toggled"]
+[connection signal="pressed" from="ExportOptions/MarginContainer/VBoxContainer/ExportButtons/PNG" to="ExportOptions/MarginContainer/VBoxContainer/ExportButtons/PNG" method="_on_pressed"]
+[connection signal="file_selected" from="ExportOptions/MarginContainer/VBoxContainer/ExportButtons/PNG/NativeFileDialog" to="ExportOptions/MarginContainer/VBoxContainer/ExportButtons/PNG" method="_on_dialog_file_selected"]
+[connection signal="pressed" from="ExportOptions/MarginContainer/VBoxContainer/ExportButtons/WebP" to="ExportOptions/MarginContainer/VBoxContainer/ExportButtons/WebP" method="_on_pressed"]
+[connection signal="file_selected" from="ExportOptions/MarginContainer/VBoxContainer/ExportButtons/WebP/NativeFileDialog" to="ExportOptions/MarginContainer/VBoxContainer/ExportButtons/WebP" method="_on_dialog_file_selected"]
+[connection signal="pressed" from="ExportOptions/MarginContainer/VBoxContainer/ExportButtons/GIF" to="ExportOptions/MarginContainer/VBoxContainer/ExportButtons/GIF" method="_on_pressed"]
+[connection signal="file_selected" from="ExportOptions/MarginContainer/VBoxContainer/ExportButtons/GIF/NativeFileDialog" to="ExportOptions/MarginContainer/VBoxContainer/ExportButtons/GIF" method="_on_dialog_file_selected"]

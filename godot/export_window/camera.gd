@@ -7,8 +7,10 @@ var extents := Vector4(-128, -128, 128, 128)
 @export var padding := 16
 @onready var reset_zoom_button: Button = $"../UILayer/MarginContainer/HBoxContainer/ResetZoom"
 
+const ZOOM_MIN: float = 0.5
 const ZOOM_MAX: float = 10.0
-const ZOOM_STEP: float = 0.4
+const ZOOM_STEP: float = 0.2
+const ZOOM_STEP_MULT_KEYBOARD: float = 3.0
 
 func _ready() -> void:
 	set_process_unhandled_input(true)
@@ -37,7 +39,7 @@ func _input(event: InputEvent) -> void:
 
 func zoom_towards(level: float, position: Vector2 = get_viewport().get_mouse_position()) -> void:
 	var old_zoom_amount := zoom_level
-	zoom_level = clampf(level, 1.0, 8.0)
+	zoom_level = clampf(level, ZOOM_MIN, ZOOM_MAX)
 	global_position -= (position - get_viewport().size * 0.5) * (1.0 / zoom_level - 1.0 / old_zoom_amount)
 	zoom = Vector2(zoom_level, zoom_level)
 	_update_zoom_text()
@@ -49,7 +51,7 @@ func _on_center_view_pressed() -> void:
 	position = Vector2()
 
 func _on_zoom_out_pressed() -> void:
-	zoom_level = clampf(zoom_level - ZOOM_STEP * zoom_level, 1.0, ZOOM_MAX)
+	zoom_level = clampf(zoom_level - ZOOM_STEP * zoom_level * ZOOM_STEP_MULT_KEYBOARD, ZOOM_MIN, ZOOM_MAX)
 	zoom = Vector2(zoom_level, zoom_level)
 	_update_zoom_text()
 
@@ -59,6 +61,6 @@ func _on_reset_zoom_pressed() -> void:
 	_update_zoom_text()
 
 func _on_zoom_in_pressed() -> void:
-	zoom_level = clampf(zoom_level + ZOOM_STEP * zoom_level, 1.0, ZOOM_MAX)
+	zoom_level = clampf(zoom_level + ZOOM_STEP * zoom_level * ZOOM_STEP_MULT_KEYBOARD, ZOOM_MIN, ZOOM_MAX)
 	zoom = Vector2(zoom_level, zoom_level)
 	_update_zoom_text()
