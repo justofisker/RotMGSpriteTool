@@ -153,7 +153,8 @@ func setup_animated_texture(textures: Array[RotmgAnimatedTexture]) -> void:
 				action_2.push_back(texture)
 			_:
 				push_error("Unknown action")
-	action_1.pop_front()
+	if action_1.size() > 2:
+		action_1.pop_front()
 	
 	if GlobalSettings.export_animated:
 		var container_0 := _animated_textures_to_sprite_container(action_0)
