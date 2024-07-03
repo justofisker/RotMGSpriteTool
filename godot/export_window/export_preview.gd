@@ -12,19 +12,19 @@ func _get_padding() -> int:
 	var expand_size := maxi(GlobalSettings.export_outline_size, GlobalSettings.export_shadow_size)
 	if expand_size == 0:
 		return 0
-	return ceilf(float(expand_size) / GlobalSettings.export_scale)
+	return ceili(float(expand_size) / GlobalSettings.export_scale)
 
 func _clear_sprites() -> void:
 	for child in sprite_area.get_children():
 		sprite_area.remove_child(child)
 
 func _set_shader() -> void:
-	var material := preload("res://export_window/outline_preview_material.tres")
-	material.set_shader_parameter("outline_color", GlobalSettings.export_outline_color)
-	material.set_shader_parameter("outline_size", GlobalSettings.export_outline_size)
-	material.set_shader_parameter("scale", GlobalSettings.export_scale)
-	material.set_shader_parameter("shadow_size", GlobalSettings.export_shadow_size)
-	material.set_shader_parameter("shadow_color", GlobalSettings.export_shadow_color)
+	var mat := preload("res://export_window/outline_preview_material.tres")
+	mat.set_shader_parameter("outline_color", GlobalSettings.export_outline_color)
+	mat.set_shader_parameter("outline_size", GlobalSettings.export_outline_size)
+	mat.set_shader_parameter("scale", GlobalSettings.export_scale)
+	mat.set_shader_parameter("shadow_size", GlobalSettings.export_shadow_size)
+	mat.set_shader_parameter("shadow_color", GlobalSettings.export_shadow_color)
 
 func _resize_texture(texture: Texture2D) -> Texture2D:
 	var padding := _get_padding()

@@ -12,10 +12,10 @@ func _ready() -> void:
 func _update_grid_size() -> void:
 	grid_size = Vector2(8, 8) * GlobalSettings.export_scale
 
-func _process(delta):
+func _process(_delta: float) -> void:
 	queue_redraw()
 
-func _draw():
+func _draw() -> void:
 	var vp_size: = viewport.size
 	var cam_pos: = camera.position
 	var vp_right: = vp_size.x / camera.zoom.x

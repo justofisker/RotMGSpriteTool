@@ -78,7 +78,6 @@ func _on_dialog_file_selected(path: String) -> void:
 	viewports.push_back(first_frame_viewport)
 	viewport_timestamps_ms.push_back(0)
 	
-	var current_time_ms := 0
 	var current_frames : PackedInt32Array = []
 	current_frames.resize(sprites.size())
 	current_frames.fill(0)
@@ -105,7 +104,6 @@ func _on_dialog_file_selected(path: String) -> void:
 		add_child(viewport)
 		viewports.push_back(viewport)
 		viewport_timestamps_ms.push_back(min_timestamp_ms)
-		current_time_ms = min_timestamp_ms 
 	
 	viewport_timestamps_ms.push_back(max_duration)
 	
@@ -122,7 +120,6 @@ func _on_dialog_file_selected(path: String) -> void:
 		webp.finalize_and_write(max_duration, path)
 	else:
 		var exporter := GifExporter.new(base_viewport.size.x, base_viewport.size.y)
-		var last_timestamp := 0
 		for idx in viewports.size():
 			var img := viewports[idx].get_texture().get_image()
 			img.convert(Image.FORMAT_RGBA8)

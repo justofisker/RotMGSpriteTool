@@ -8,46 +8,46 @@ enum ExportMode {
 	NONE = -1,
 }
 
-var export_mode : ExportMode = -1
+var export_mode : ExportMode = ExportMode.NONE
 var textures: Array[RotmgTexture] = []
 var durations: PackedFloat32Array = []
 var texture: RotmgTexture = null
 var animated_textures: Array[RotmgAnimatedTexture] = []
 
-static func from_texture_array(textures: Array[RotmgTexture]) -> ExportData:
+static func from_texture_array(t: Array[RotmgTexture]) -> ExportData:
 	var data := ExportData.new()
 	data.export_mode = ExportMode.MULTITEXTURES
-	data.textures = textures
+	data.textures = t
 	data.durations = []
 	data.texture = null
 	data.animated_textures = []
 	return data
 
-static func from_texture_time_array(textures: Array[RotmgTexture], durations: PackedFloat32Array) -> ExportData:
+static func from_texture_time_array(t: Array[RotmgTexture], d: PackedFloat32Array) -> ExportData:
 	var data := ExportData.new()
 	data.export_mode = ExportMode.MULTITEXTURES_TIMED
-	data.textures = textures
-	data.durations = durations
+	data.textures = t
+	data.durations = d
 	data.texture = null
 	data.animated_textures = []
 	return data
 
-static func from_texture(texture: RotmgTexture) -> ExportData:
+static func from_texture(t: RotmgTexture) -> ExportData:
 	var data := ExportData.new()
 	data.export_mode = ExportMode.SINGLE_TEXTURE
 	data.textures = []
 	data.durations = []
-	data.texture = texture
+	data.texture = t
 	data.animated_textures = []
 	return data
 
-static func from_animated_textures(animated_textures: Array[RotmgAnimatedTexture]) -> ExportData:
+static func from_animated_textures(at: Array[RotmgAnimatedTexture]) -> ExportData:
 	var data := ExportData.new()
 	data.export_mode = ExportMode.ANIMATED_TEXTURE
 	data.textures = []
 	data.durations = []
 	data.texture = null
-	data.animated_textures = animated_textures
+	data.animated_textures = at
 	return data
 
 func create_window() -> Window:

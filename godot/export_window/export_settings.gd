@@ -34,9 +34,6 @@ func _on_shadow_size_value_changed(value: float) -> void:
 func _on_shadow_color_changed(color: Color) -> void:
 	GlobalSettings.export_shadow_color = color
 
-func _on_layout_style_selected(index: int) -> void:
-	pass # Replace with function body.
-
 func _on_background_toggled(toggled_on: bool) -> void:
 	GlobalSettings.export_background_enabled = toggled_on
 

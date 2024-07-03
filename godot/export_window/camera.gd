@@ -24,9 +24,9 @@ func _unhandled_input(event: InputEvent) -> void:
 					mouse_position = get_viewport().get_mouse_position()
 					Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 				MOUSE_BUTTON_WHEEL_DOWN:
-					zoom_towards(zoom_level - ZOOM_STEP * zoom_level)
+					zoom_towards_cursor(zoom_level - ZOOM_STEP * zoom_level)
 				MOUSE_BUTTON_WHEEL_UP:
-					zoom_towards(zoom_level + ZOOM_STEP * zoom_level)
+					zoom_towards_cursor(zoom_level + ZOOM_STEP * zoom_level)
 
 func _input(event: InputEvent) -> void:
 	if pressed:
@@ -37,10 +37,10 @@ func _input(event: InputEvent) -> void:
 			Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 			get_viewport().warp_mouse(mouse_position)
 
-func zoom_towards(level: float, position: Vector2 = get_viewport().get_mouse_position()) -> void:
+func zoom_towards_cursor(level: float) -> void:
 	var old_zoom_amount := zoom_level
 	zoom_level = clampf(level, ZOOM_MIN, ZOOM_MAX)
-	global_position -= (position - get_viewport().size * 0.5) * (1.0 / zoom_level - 1.0 / old_zoom_amount)
+	global_position -= (get_viewport().get_mouse_position() - get_viewport().size * 0.5) * (1.0 / zoom_level - 1.0 / old_zoom_amount)
 	zoom = Vector2(zoom_level, zoom_level)
 	_update_zoom_text()
 

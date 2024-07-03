@@ -1,7 +1,6 @@
-[gd_scene load_steps=9 format=3 uid="uid://bi1k4fpl3qytt"]
+[gd_scene load_steps=8 format=3 uid="uid://bi1k4fpl3qytt"]
 
 [ext_resource type="Script" path="res://addons/SmoothScroll/SmoothScrollContainer.gd" id="2_x8vvr"]
-[ext_resource type="Script" path="res://character_list/character_list.gd" id="3_37r0p"]
 [ext_resource type="Script" path="res://addons/SmoothScroll/scroll_damper/expo_scroll_damper.gd" id="3_o08e4"]
 [ext_resource type="Script" path="res://character_list/character_list_populator.gd" id="4_7rkx3"]
 [ext_resource type="PackedScene" uid="uid://c8xoealrtv7p4" path="res://sidebar/sidebar.tscn" id="4_rbgug"]
@@ -47,7 +46,6 @@ drag_with_mouse = false
 texture_filter = 1
 layout_mode = 2
 size_flags_horizontal = 3
-script = ExtResource("3_37r0p")
 
 [node name="CharacterListPopulator" type="Node" parent="VBoxContainer/SmoothScrollContainer/CharacterList" node_paths=PackedStringArray("xml_selector")]
 script = ExtResource("4_7rkx3")
