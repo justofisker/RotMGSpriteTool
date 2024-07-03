@@ -1,14 +1,23 @@
 extends Button
 
-@export_enum("WebP", "GIF") var export_type : int = 0
+@export_enum("WebP", "GIF", "APNG") var export_type : int = ExportType.WebP
+
+enum ExportType {
+	WebP,
+	GIF,
+	APNG,
+}
 
 @onready var dialog: NativeFileDialog = $NativeFileDialog
 
 func _ready() -> void:
-	if export_type == 0:
-		dialog.add_filter("*.webp", "WebP Image (*.webp)")
-	else:
-		dialog.add_filter("*.gif", "GIF Image (*.gif)")
+	match export_type:
+		ExportType.WebP:
+			dialog.add_filter("*.webp", "WebP Image (*.webp)")
+		ExportType.GIF:
+			dialog.add_filter("*.gif", "GIF Image (*.gif)")
+		ExportType.APNG:
+			dialog.add_filter("*.png", "PNG Image (*.png)")
 	GlobalSettings.export_setting_changed.connect(_on_export_setting_changed)
 	_on_export_setting_changed()
 
@@ -25,17 +34,21 @@ func _on_pressed() -> void:
 func _on_dialog_file_selected(path: String) -> void:
 	var dir := path.substr(0, path.rfind("/") + 1)
 	GlobalSettings.last_save_location = dir
-	if export_type == 0:
-		if !path.to_lower().ends_with(".webp"):
-			path += ".webp"
-	else:
-		if !path.to_lower().ends_with(".gif"):
-			path += ".gif"
-		if GlobalSettings.export_shadow_size > 0 && !GlobalSettings.export_background_enabled:
-			var old_shadow_size := GlobalSettings.export_shadow_size
-			GlobalSettings.export_shadow_size = 0
-			await get_tree().process_frame
-			get_tree().process_frame.connect(func(): GlobalSettings.export_shadow_size = old_shadow_size, CONNECT_ONE_SHOT)
+	var extension : String = ""
+	match export_type:
+		ExportType.WebP:
+			extension = "webp"
+		ExportType.GIF:
+			extension = "gif"
+			if GlobalSettings.export_shadow_size > 0 && !GlobalSettings.export_background_enabled:
+				var old_shadow_size := GlobalSettings.export_shadow_size
+				GlobalSettings.export_shadow_size = 0
+				await get_tree().process_frame
+				get_tree().process_frame.connect(func(): GlobalSettings.export_shadow_size = old_shadow_size, CONNECT_ONE_SHOT)
+		ExportType.APNG:
+			extension = "png"
+	if !path.to_lower().ends_with("." + extension):
+		path += "." + extension
 	
 	var base_viewport := SubViewport.new()
 	base_viewport.size = Vector2(%ExportPreview.camera.extents.z - %ExportPreview.camera.extents.x, %ExportPreview.camera.extents.w - %ExportPreview.camera.extents.y)
@@ -109,24 +122,30 @@ func _on_dialog_file_selected(path: String) -> void:
 	
 	await RenderingServer.frame_post_draw
 	
-	if export_type == 0:
-		var webp = WebpExporter.new()
-		webp.setup_with_size(base_viewport.size.x, base_viewport.size.y)
-		
-		for idx in viewports.size():
-			webp.add_frame(viewports[idx].get_texture().get_image(), viewport_timestamps_ms[idx])
-			remove_child(viewports[idx])
-		
-		webp.finalize_and_write(max_duration, path)
-	else:
-		var exporter := GifExporter.new(base_viewport.size.x, base_viewport.size.y)
-		for idx in viewports.size():
-			var img := viewports[idx].get_texture().get_image()
-			img.convert(Image.FORMAT_RGBA8)
-			exporter.add_frame(img, (viewport_timestamps_ms[idx + 1] - viewport_timestamps_ms[idx]) / 1000.0, MediumCutQuantization)
-			remove_child(viewports[idx])
-
-		
-		var file := FileAccess.open(path, FileAccess.WRITE)
-		file.store_buffer(exporter.export_file_data())
-		file.close()
+	match export_type:
+		ExportType.WebP:
+			var webp := WebpExporter.setup_with_size(base_viewport.size.x, base_viewport.size.y)
+			
+			for idx in viewports.size():
+				webp.add_frame(viewports[idx].get_texture().get_image(), viewport_timestamps_ms[idx])
+				remove_child(viewports[idx])
+			
+			webp.finalize_and_write(max_duration, path)
+		ExportType.GIF:
+			var exporter := GifExporter.new(base_viewport.size.x, base_viewport.size.y)
+			for idx in viewports.size():
+				var img := viewports[idx].get_texture().get_image()
+				img.convert(Image.FORMAT_RGBA8)
+				exporter.add_frame(img, (viewport_timestamps_ms[idx + 1] - viewport_timestamps_ms[idx]) / 1000.0, MediumCutQuantization)
+				remove_child(viewports[idx])
+			var file := FileAccess.open(path, FileAccess.WRITE)
+			file.store_buffer(exporter.export_file_data())
+			file.close()
+		ExportType.APNG:
+			var apng := ApngExporter.setup_with_size(base_viewport.size.x, base_viewport.size.y)
+			
+			for idx in viewports.size():
+				apng.add_frame(viewports[idx].get_texture().get_image(), viewport_timestamps_ms[idx])
+				remove_child(viewports[idx])
+			
+			apng.finalize_and_write(max_duration, path)

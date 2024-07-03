@@ -2,32 +2,22 @@ use godot::{engine::Image, prelude::*};
 use webp_animation::prelude::*;
 
 #[derive(GodotClass)]
-#[class(base=Object)]
+#[class(no_init)]
 struct WebpExporter {
-    base: Base<Object>,
     encoder: Option<Encoder>,
-}
-
-#[godot_api]
-impl IObject for WebpExporter {
-    fn init(base: Base<Object>) -> Self {
-        Self {
-            base,
-            encoder: None,
-        }
-    }
 }
 
 #[godot_api]
 impl WebpExporter {
     #[func]
-    fn setup_with_size(&mut self, width: u32, height: u32) {
+    fn setup_with_size(width: u32, height: u32) -> Option<Gd<Self>> {
         match Encoder::new((width, height)) {
-            Ok(encoder) => {
-                self.encoder = Some(encoder);
-            }
+            Ok(encoder) => Some(Gd::from_object(Self {
+                encoder: Some(encoder),
+            })),
             Err(err) => {
                 godot_error!("Error while setuping up webp exporter: {:?}", err);
+                None
             }
         }
     }
@@ -39,7 +29,7 @@ impl WebpExporter {
                 godot_error!("Error while adding frame: {:?}", err);
             }
         } else {
-            godot_error!("Attempting to add frame before encoder is setup.");
+            godot_error!("Attempting to add frame after finalize.");
         }
     }
 
@@ -57,7 +47,7 @@ impl WebpExporter {
                 }
             }
         } else {
-            godot_error!("Attempting to finalize before encoder is setup.");
+            godot_error!("Attempting to finalize after already finalized.");
         }
     }
 }

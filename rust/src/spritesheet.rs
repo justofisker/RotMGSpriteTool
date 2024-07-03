@@ -1,6 +1,5 @@
 use godot::classes::{INode, Node};
 use godot::engine::{AtlasTexture, FileAccess, Image, ImageTexture, Texture2D};
-use godot::global::push_warning;
 use godot::prelude::*;
 
 extern crate flatbuffers;
@@ -129,14 +128,16 @@ impl SpriteSheetDeserializer {
         let mut array = Array::new();
 
         for sprite in &self.animated_sprites {
-            if sprite.sprite_sheet_name.eq_ignore_ascii_case(&sprite_sheet) && sprite.index == index {
-                array.push(Gd::from_object(RotmgAnimatedTexture{
+            if sprite.sprite_sheet_name.eq_ignore_ascii_case(&sprite_sheet) && sprite.index == index
+            {
+                array.push(Gd::from_object(RotmgAnimatedTexture {
                     set: sprite.set,
                     direction: sprite.direction,
                     action: sprite.action,
                     texture: Some(Gd::from_object(RotmgTexture {
                         padding: sprite.sprite.padding,
-                        texture: self.create_atlas_texture(sprite.sprite.a_id, &sprite.sprite.position),
+                        texture: self
+                            .create_atlas_texture(sprite.sprite.a_id, &sprite.sprite.position),
                     })),
                 }));
             }
@@ -151,10 +152,11 @@ impl SpriteSheetDeserializer {
             if sheet.sprite_sheet_name.eq_ignore_ascii_case(&sheet_name) {
                 for sprite in &sheet.sprites {
                     if sprite.index == index {
-                        if let Some(tex) = self.create_atlas_texture(sprite.a_id, &sprite.position) {
+                        if let Some(tex) = self.create_atlas_texture(sprite.a_id, &sprite.position)
+                        {
                             return Some(Gd::from_object(RotmgTexture {
                                 padding: sprite.padding,
-                                texture: Some(tex)
+                                texture: Some(tex),
                             }));
                         }
                         return None;

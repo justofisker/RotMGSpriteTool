@@ -172,7 +172,6 @@ script = ExtResource("4_mguji")
 access = 2
 
 [node name="WebP" type="Button" parent="ExportOptions/MarginContainer/VBoxContainer/ExportButtons"]
-visible = false
 layout_mode = 2
 text = "Export as Animated WebP"
 script = ExtResource("5_p5lyh")
@@ -181,13 +180,21 @@ script = ExtResource("5_p5lyh")
 access = 2
 
 [node name="GIF" type="Button" parent="ExportOptions/MarginContainer/VBoxContainer/ExportButtons"]
-visible = false
 layout_mode = 2
 text = "Export as Animated GIF"
 script = ExtResource("5_p5lyh")
 export_type = 1
 
 [node name="NativeFileDialog" type="NativeFileDialog" parent="ExportOptions/MarginContainer/VBoxContainer/ExportButtons/GIF"]
+access = 2
+
+[node name="APNG" type="Button" parent="ExportOptions/MarginContainer/VBoxContainer/ExportButtons"]
+layout_mode = 2
+text = "Export as Animated PNG"
+script = ExtResource("5_p5lyh")
+export_type = 2
+
+[node name="NativeFileDialog" type="NativeFileDialog" parent="ExportOptions/MarginContainer/VBoxContainer/ExportButtons/APNG"]
 access = 2
 
 [connection signal="value_changed" from="ExportOptions/MarginContainer/VBoxContainer/SpriteScale/SpinBox" to="ExportOptions/ExportSettings" method="_on_sprite_scale_value_changed"]
@@ -204,3 +211,5 @@ access = 2
 [connection signal="file_selected" from="ExportOptions/MarginContainer/VBoxContainer/ExportButtons/WebP/NativeFileDialog" to="ExportOptions/MarginContainer/VBoxContainer/ExportButtons/WebP" method="_on_dialog_file_selected"]
 [connection signal="pressed" from="ExportOptions/MarginContainer/VBoxContainer/ExportButtons/GIF" to="ExportOptions/MarginContainer/VBoxContainer/ExportButtons/GIF" method="_on_pressed"]
 [connection signal="file_selected" from="ExportOptions/MarginContainer/VBoxContainer/ExportButtons/GIF/NativeFileDialog" to="ExportOptions/MarginContainer/VBoxContainer/ExportButtons/GIF" method="_on_dialog_file_selected"]
+[connection signal="pressed" from="ExportOptions/MarginContainer/VBoxContainer/ExportButtons/APNG" to="ExportOptions/MarginContainer/VBoxContainer/ExportButtons/APNG" method="_on_pressed"]
+[connection signal="file_selected" from="ExportOptions/MarginContainer/VBoxContainer/ExportButtons/APNG/NativeFileDialog" to="ExportOptions/MarginContainer/VBoxContainer/ExportButtons/APNG" method="_on_dialog_file_selected"]

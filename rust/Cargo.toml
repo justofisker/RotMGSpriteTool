@@ -8,5 +8,6 @@ crate-type = ["cdylib"]
 
 [dependencies]
 flatbuffers = "24.3"
-godot = { version = "0.1" }
-webp-animation = "0.9.0"
+godot = "0.1"
+png = "0.17"
+webp-animation = "0.9"

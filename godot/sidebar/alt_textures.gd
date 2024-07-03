@@ -41,8 +41,8 @@ func _update_sprite() -> void:
 
 func _on_alt_tex_value_changed(value: float) -> void:
 	var texture := character.alt_textures[int(value)]
+	%Sprite.animation = str(int(value))
 	if texture.animated:
-		%Sprite.animation = str(int(value))
 		button.export_data = ExportData.from_animated_textures(RotmgAtlases.get_animated_textures(texture.file_name, texture.index))
 	else:
 		button.export_data = ExportData.from_texture(RotmgAtlases.get_texture(texture.file_name, texture.index))
