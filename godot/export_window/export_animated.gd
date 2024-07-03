@@ -31,6 +31,10 @@ func _on_dialog_file_selected(path: String) -> void:
 	else:
 		if !path.to_lower().ends_with(".gif"):
 			path += ".gif"
+		var old_shadow_size := GlobalSettings.export_shadow_size
+		GlobalSettings.export_shadow_size = 0
+		await get_tree().process_frame
+		get_tree().process_frame.connect(func(): GlobalSettings.export_shadow_size = old_shadow_size, CONNECT_ONE_SHOT)
 	
 	var base_viewport := SubViewport.new()
 	base_viewport.size = Vector2(%ExportPreview.camera.extents.z - %ExportPreview.camera.extents.x, %ExportPreview.camera.extents.w - %ExportPreview.camera.extents.y)
