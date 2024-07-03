@@ -11,7 +11,7 @@ font_size = 32
 disable_3d = true
 title = "About"
 initial_position = 2
-size = Vector2i(315, 325)
+size = Vector2i(315, 300)
 transient = true
 exclusive = true
 unresizable = true
@@ -60,18 +60,16 @@ text = "Version "
 horizontal_alignment = 1
 script = ExtResource("2_hw5bq")
 
-[node name="CreatedBy" type="Label" parent="About/Panel/MarginContainer/VBoxContainer"]
-layout_mode = 2
-text = "Created by Just"
-horizontal_alignment = 1
-
 [node name="RichTextLabel" type="RichTextLabel" parent="About/Panel/MarginContainer/VBoxContainer"]
 layout_mode = 2
 bbcode_enabled = true
-text = "[url=\"https://www.realmeye.com/player/Just\"]RealmEye Profile[/url]
-Created with [url=\"https://godotengine.org/\"]Godot Engine[/url]
+text = "[center]By [url=\"https://www.realmeye.com/player/Just\"]Just[/url][/center]
+A tool created for automating the export of Realm of the Mad God sprites from the game files.
 
-Put a lot of time and effort into creating this and hope you find it useful for your creation of realm related content and wiki use! You can always hit me a message on RealmEye for suggestions to be added!"
+
+
+Created using  [url=\"https://godotengine.org/\"]Godot Engine[/url]
+[url=\"https://github.com/justofisker/RotMGSpriteTool\"]Source Code[url]"
 fit_content = true
 script = ExtResource("2_uayei")
 
