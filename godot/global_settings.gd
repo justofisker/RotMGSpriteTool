@@ -15,7 +15,6 @@ var export_outline_size: int = 1 :
 var export_outline_color: Color = Color.BLACK :
 	set(value):
 		export_outline_color = value
-		#export_setting_changed.emit()
 		setting_changed.emit()
 
 var export_shadow_size: int = 5 :
@@ -27,26 +26,22 @@ var export_shadow_size: int = 5 :
 var export_shadow_color: Color = Color.BLACK :
 	set(value):
 		export_shadow_color = value
-		#export_setting_changed.emit()
 		setting_changed.emit()
 
 var export_background_enabled: bool = false :
 	set(value):
 		export_background_enabled = value
-		export_setting_changed.emit()
 		setting_changed.emit()
 
 var export_background_color: Color = Color.hex(0x3e4855ff) :
 	set(value):
 		export_background_color = value
-		#export_setting_changed.emit()
 		setting_changed.emit()
 
 var export_animated: bool = true :
 	set(value):
 		export_animated = value
 		export_setting_changed.emit()
-		#setting_changed.emit()
 
 var last_save_location : String = "./" :
 	set(value):

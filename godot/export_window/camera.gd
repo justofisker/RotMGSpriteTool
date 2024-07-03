@@ -1,7 +1,6 @@
 extends Camera2D
 
 var zoom_level := 1.0
-var mouse_position := Vector2()
 var pressed := false
 var extents := Vector4(-128, -128, 128, 128)
 @export var padding := 16
@@ -21,21 +20,32 @@ func _unhandled_input(event: InputEvent) -> void:
 			match event.button_index:
 				MOUSE_BUTTON_LEFT:
 					pressed = true
-					mouse_position = get_viewport().get_mouse_position()
-					Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
+					Input.set_default_cursor_shape(Input.CURSOR_DRAG)
 				MOUSE_BUTTON_WHEEL_DOWN:
 					zoom_towards_cursor(zoom_level - ZOOM_STEP * zoom_level)
 				MOUSE_BUTTON_WHEEL_UP:
 					zoom_towards_cursor(zoom_level + ZOOM_STEP * zoom_level)
 
+var ignore_next_mouse := false
+
 func _input(event: InputEvent) -> void:
 	if pressed:
 		if event is InputEventMouseMotion:
+			if ignore_next_mouse:
+				ignore_next_mouse = false
+				return
 			position -= event.relative / zoom
+			var mouse_position := get_viewport().get_mouse_position()
+			var viewport_size := get_viewport_rect().size
+			if mouse_position.x < 0 || mouse_position.x > viewport_size.x || mouse_position.y < 0 || mouse_position.y > viewport_size.y:
+				mouse_position.x = posmod(mouse_position.x, viewport_size.x)
+				mouse_position.y = posmod(mouse_position.y, viewport_size.y)
+				Input.warp_mouse(mouse_position)
+				ignore_next_mouse = true
 		elif event is InputEventMouseButton && !event.pressed && event.button_index == MOUSE_BUTTON_LEFT:
 			pressed = false
 			Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
-			get_viewport().warp_mouse(mouse_position)
+			Input.set_default_cursor_shape(Input.CURSOR_ARROW)
 
 func zoom_towards_cursor(level: float) -> void:
 	var old_zoom_amount := zoom_level
