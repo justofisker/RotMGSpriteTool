@@ -5,6 +5,9 @@ extends Node2D
 @onready var camera: Camera2D = $Camera
 @onready var background: ColorRect = $Camera/Background
 
+@export var shader_material: ShaderMaterial
+@export var sprite_container_script: Script
+
 func _ready() -> void:
 	GlobalSettings.setting_changed.connect(_set_shader)
 
@@ -19,12 +22,11 @@ func _clear_sprites() -> void:
 		sprite_area.remove_child(child)
 
 func _set_shader() -> void:
-	var mat := preload("res://export_window/outline_preview_material.tres")
-	mat.set_shader_parameter("outline_color", GlobalSettings.export_outline_color)
-	mat.set_shader_parameter("outline_size", GlobalSettings.export_outline_size)
-	mat.set_shader_parameter("scale", GlobalSettings.export_scale)
-	mat.set_shader_parameter("shadow_size", GlobalSettings.export_shadow_size)
-	mat.set_shader_parameter("shadow_color", GlobalSettings.export_shadow_color)
+	shader_material.set_shader_parameter("outline_color", GlobalSettings.export_outline_color)
+	shader_material.set_shader_parameter("outline_size", GlobalSettings.export_outline_size)
+	shader_material.set_shader_parameter("scale", GlobalSettings.export_scale)
+	shader_material.set_shader_parameter("shadow_size", GlobalSettings.export_shadow_size)
+	shader_material.set_shader_parameter("shadow_color", GlobalSettings.export_shadow_color)
 
 func _resize_texture(texture: Texture2D) -> Texture2D:
 	var padding := _get_padding()
@@ -54,6 +56,15 @@ func _resize_textures(textures: Array[RotmgTexture]) -> Array[Texture2D]:
 	
 	return out_textures
 
+func _texture_to_sprite(texture: Texture2D) -> Sprite2D:
+	var sprite := Sprite2D.new()
+	sprite.texture = texture
+	sprite.scale = Vector2(GlobalSettings.export_scale, GlobalSettings.export_scale)
+	sprite.material = shader_material
+	sprite.centered = false
+	sprite.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	return sprite
+
 func _animated_textures_to_sprite_container(animated_textures: Array[RotmgAnimatedTexture]) -> Control:
 	var textures : Array[RotmgTexture] = []
 	for texture in animated_textures:
@@ -72,11 +83,11 @@ func _textures_to_sprite_container(textures: Array[RotmgTexture], durations: Pac
 	sprite.sprite_frames = sprite_frames
 	sprite.scale = Vector2(GlobalSettings.export_scale, GlobalSettings.export_scale)
 	sprite.play()
-	sprite.material = preload("res://export_window/outline_preview_material.tres")
+	sprite.material = shader_material
 	sprite.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	sprite.speed_scale = 0.2
 	var sprite_container := Control.new()
-	sprite_container.set_script(preload("res://sidebar/animated_sprite_container.gd"))
+	sprite_container.set_script(sprite_container_script)
 	sprite_container.add_child(sprite)
 	sprite_container.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	return sprite_container
@@ -100,7 +111,7 @@ func setup_animation(frames: Array[RotmgTexture], durations: PackedFloat32Array)
 		for tex in resized_textures:
 			var sprite := Sprite2D.new()
 			sprite.texture = tex
-			sprite.material = preload("res://export_window/outline_preview_material.tres")
+			sprite.material = shader_material
 			sprite.scale = Vector2(GlobalSettings.export_scale, GlobalSettings.export_scale)
 			sprite.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 			max_size.x = maxf(max_size.x, tex.get_width())
@@ -125,7 +136,7 @@ func setup_texture(texture: RotmgTexture) -> void:
 	var sprite := Sprite2D.new()
 	sprite.texture = _resize_texture(texture.texture)
 	sprite.scale = Vector2(GlobalSettings.export_scale, GlobalSettings.export_scale)
-	sprite.material = preload("res://export_window/outline_preview_material.tres")
+	sprite.material = shader_material
 	sprite.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	sprite_area.add_child(sprite)
 	await RenderingServer.frame_pre_draw
@@ -137,68 +148,94 @@ func setup_animated_texture(textures: Array[RotmgAnimatedTexture]) -> void:
 	_clear_sprites()
 	_set_shader()
 	
-	# TODO: Currently assuming no direction is set, Umi Deux has this set and acts weird cause of it
+	var get_key = func(action: int, direction: int) -> int:
+		var key = action & 0xFF
+		key |= (direction & 0xFF) << 16
+		return key
 	
-	var action_0 : Array[RotmgAnimatedTexture] = []
-	var action_1 : Array[RotmgAnimatedTexture] = []
-	var action_2 : Array[RotmgAnimatedTexture] = []
+	var texture_dict = {}
 	
+	var actions : PackedInt32Array = []
+	var directions : PackedInt32Array = []
+	
+	for idx in textures.size():
+		var action := textures[idx].action
+		var direction := textures[idx].direction
+		var key : int = get_key.call(action, direction)
+		if !actions.has(action):
+			actions.push_back(action)
+		if !directions.has(direction):
+			directions.push_back(direction)
+		if !texture_dict.has(key):
+			texture_dict[key] = []
+		texture_dict[key].push_back(idx)
+	
+	actions.sort()
+	directions.sort()
+	
+	# For some reason some character has their idle frame as the first frame of the walk animation
+	for direction in directions:
+		if texture_dict.has(get_key.call(1, direction)) && texture_dict.has(get_key.call(2, direction)):
+			var walk : PackedInt32Array = texture_dict[get_key.call(1, direction)]
+			var attack_size : int = texture_dict[get_key.call(2, direction)].size()
+			if walk.size() == attack_size + 1:
+				texture_dict[get_key.call(1, direction)] = walk.slice(1)
+	
+	var max_size := Vector2i()
+	var resized_textures : Array[Texture2D] = []
 	for texture in textures:
-		match texture.action:
-			0:
-				action_0.push_back(texture)
-			1:
-				action_1.push_back(texture)
-			2:
-				action_2.push_back(texture)
-			_:
-				push_error("Unknown action")
-	if action_1.size() > 2:
-		action_1.pop_front()
+		var tex := _resize_texture(texture.texture.texture)
+		max_size.x = maxi(max_size.x, tex.get_width())
+		max_size.y = maxi(max_size.y, tex.get_height())
+		resized_textures.push_back(tex)
+	max_size *= GlobalSettings.export_scale
 	
 	if GlobalSettings.export_animated:
-		var container_0 := _animated_textures_to_sprite_container(action_0)
-		var container_1 := _animated_textures_to_sprite_container(action_1)
-		var container_2 := _animated_textures_to_sprite_container(action_2)
-		sprite_area.add_child(container_0)
-		sprite_area.add_child(container_1)
-		sprite_area.add_child(container_2)
-		await RenderingServer.frame_pre_draw
-		var width := container_0.size.x + container_1.size.x + container_2.size.x
-		var height := maxf(container_0.size.y, maxf(container_1.size.y, container_2.size.y))
-		container_0.position.y = -container_0.size.y / 2.0
-		container_0.position.x = - width / 2
-		container_1.position.y = -container_1.size.y / 2.0
-		container_1.position.x = - width / 2 + container_0.size.x
-		container_2.position.y = -container_2.size.y / 2.0
-		container_2.position.x = width / 2 - container_2.size.x
-		camera.extents = Vector4(-width / 2.0, -height / 2.0, width / 2.0, height / 2.0)
+		var rows : Array[Array] = []
+		for direction in directions:
+			var row : Array[Control] = []
+			for action in actions:
+				var key : int = get_key.call(action, direction)
+				if texture_dict.has(key):
+					var anm_textures : Array[RotmgAnimatedTexture] = []
+					for tex in texture_dict[key]:
+						anm_textures.push_back(textures[tex])
+					row.push_back(_animated_textures_to_sprite_container(anm_textures))
+			rows.push_back(row)
+		var y_offset : int = 0
+		for row in rows:
+			for idx in row.size():
+				var container : Control = row[idx]
+				sprite_area.add_child(container)
+				container.position.x = idx * max_size.x
+				container.position.y = y_offset
+			y_offset += max_size.y
+		var width : int = 0
+		for row in rows:
+			width = maxi(width, max_size.x * row.size())
+		for child in sprite_area.get_children():
+			child.position.x -= width / 2.0
+			child.position.y -= y_offset / 2.0
+		camera.extents = Vector4(-width / 2.0, -y_offset / 2.0, width / 2.0, y_offset / 2.0)
 	else:
-		var actions := [ action_0, action_1, action_2 ]
-		var actions_resize := []
-		
-		var max_size := Vector2()
-		for idx in actions.size():
-			actions_resize.push_back([])
-			for jdx in actions[idx].size():
-				var tex := _resize_texture(actions[idx][jdx].texture.texture)
-				actions_resize[idx].push_back(tex)
-				max_size.x = maxf(max_size.x, tex.get_width())
-				max_size.y = maxf(max_size.y, tex.get_height())
-		max_size *= GlobalSettings.export_scale
-		
-		var height := max_size.y * 3
-		var width := max_size.x * maxi(action_0.size(), maxi(action_1.size(), action_2.size()))
-		
-		for idx in actions_resize.size():
-			for jdx in actions_resize[idx].size():
-				var sprite = Sprite2D.new()
-				sprite.texture = actions_resize[idx][jdx]
-				sprite.scale = Vector2(GlobalSettings.export_scale, GlobalSettings.export_scale)
-				sprite.material = preload("res://export_window/outline_preview_material.tres")
-				sprite.centered = false
-				sprite.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
-				sprite_area.add_child(sprite)
-				sprite.position.x = -width / 2.0 + max_size.x * jdx
-				sprite.position.y = -height / 1.5 + max_size.y * 0.5 + height / 3.0 * idx
-		camera.extents = Vector4(-width / 2.0, -height / 2.0, width / 2.0, height / 2.0)
+		var y_offset : int = 0
+		for action in actions:
+			for direction in directions:
+				var key = get_key.call(action, direction)
+				if !texture_dict.has(key):
+					continue
+				var row : Array = texture_dict[key]
+				for idx in row.size():
+					var sprite := _texture_to_sprite(resized_textures[row[idx]])
+					sprite_area.add_child(sprite)
+					sprite.position.x = idx * max_size.x
+					sprite.position.y = y_offset
+				y_offset += max_size.y
+		var width = 0
+		for row in texture_dict.values():
+			width = maxi(width, max_size.x * row.size())
+		for child in sprite_area.get_children():
+			child.position.x -= width / 2.0
+			child.position.y -= y_offset / 2.0
+		camera.extents = Vector4(-width / 2.0, -y_offset / 2.0, width / 2.0, y_offset / 2.0)
+	

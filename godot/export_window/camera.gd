@@ -36,10 +36,10 @@ func _input(event: InputEvent) -> void:
 				return
 			position -= event.relative / zoom
 			var mouse_position := get_viewport().get_mouse_position()
-			var viewport_size := get_viewport_rect().size
+			var viewport_size := Vector2i(get_viewport_rect().size)
 			if mouse_position.x < 0 || mouse_position.x > viewport_size.x || mouse_position.y < 0 || mouse_position.y > viewport_size.y:
-				mouse_position.x = posmod(mouse_position.x, viewport_size.x)
-				mouse_position.y = posmod(mouse_position.y, viewport_size.y)
+				mouse_position.x = posmod(int(mouse_position.x), viewport_size.x)
+				mouse_position.y = posmod(int(mouse_position.y), viewport_size.y)
 				Input.warp_mouse(mouse_position)
 				ignore_next_mouse = true
 		elif event is InputEventMouseButton && !event.pressed && event.button_index == MOUSE_BUTTON_LEFT:

@@ -11,5 +11,5 @@ func _on_setting_changed() -> void:
 		color.a = 0
 
 func resize() -> void:
-	size = get_viewport().size * 2
-	position = -size / 2.0
+	set_deferred("size", get_viewport().size)
+	position = -get_viewport().size / 2.0

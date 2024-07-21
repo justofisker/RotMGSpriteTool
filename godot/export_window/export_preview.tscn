@@ -1,11 +1,13 @@
-[gd_scene load_steps=16 format=3 uid="uid://cqnb17c1naiw"]
+[gd_scene load_steps=18 format=3 uid="uid://cqnb17c1naiw"]
 
 [ext_resource type="Script" path="res://export_window/export_preview.gd" id="1_dng38"]
 [ext_resource type="Script" path="res://export_window/camera.gd" id="1_jrekc"]
 [ext_resource type="Script" path="res://export_window/grid.gd" id="1_qj44q"]
+[ext_resource type="Material" uid="uid://du4id8y1i8pqb" path="res://export_window/outline_preview_material.tres" id="2_bhicp"]
 [ext_resource type="Texture2D" uid="uid://dj5crsnlf763o" path="res://export_window/CenterView.svg" id="2_vef8v"]
 [ext_resource type="Theme" uid="uid://c1swtnev81xu" path="res://export_window/export_preview_ui_theme.tres" id="2_yhmk3"]
 [ext_resource type="Script" path="res://export_window/background.gd" id="3_0hgyv"]
+[ext_resource type="Script" path="res://sidebar/animated_sprite_container.gd" id="3_dmydw"]
 [ext_resource type="Texture2D" uid="uid://8k6f6wta4184" path="res://export_window/ZoomMore.svg" id="3_g68fs"]
 [ext_resource type="Texture2D" uid="uid://bwq1qvonclya6" path="res://export_window/ZoomLess.svg" id="4_vjt06"]
 
@@ -38,6 +40,8 @@ events = [SubResource("InputEventKey_ve1ct")]
 [node name="ExportPreview" type="Node2D"]
 texture_filter = 1
 script = ExtResource("1_dng38")
+shader_material = ExtResource("2_bhicp")
+sprite_container_script = ExtResource("3_dmydw")
 
 [node name="UILayer" type="CanvasLayer" parent="."]
 
