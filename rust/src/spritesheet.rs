@@ -1,5 +1,5 @@
+use godot::classes::{AtlasTexture, FileAccess, Image, ImageTexture, Texture2D};
 use godot::classes::{INode, Node};
-use godot::engine::{AtlasTexture, FileAccess, Image, ImageTexture, Texture2D};
 use godot::prelude::*;
 
 extern crate flatbuffers;
@@ -36,16 +36,16 @@ impl INode for SpriteSheetDeserializer {
     }
 
     fn ready(&mut self) {
-        if godot::classes::Os::singleton().has_feature("editor".into()) {
+        if godot::classes::Os::singleton().has_feature("editor") {
             self.map_objects = Some(load("res://assets/atlases/mapObjects.png"));
             self.ground_tiles = Some(load("res://assets/atlases/groundTiles.png"));
             self.characters = Some(load("res://assets/atlases/characters.png"));
         } else {
             fn load_img(file_path: &str) -> Option<Gd<Texture2D>> {
-                if FileAccess::file_exists(file_path.into()) {
+                if FileAccess::file_exists(file_path) {
                     let mut img = Image::new_gd();
-                    img.load(file_path.into());
-                    Some(ImageTexture::create_from_image(img).unwrap().upcast())
+                    img.load(file_path);
+                    Some(ImageTexture::create_from_image(&img).unwrap().upcast())
                 } else {
                     godot_error!("Failed to load image file: {}", file_path);
                     None
@@ -58,9 +58,9 @@ impl INode for SpriteSheetDeserializer {
         }
 
         let spritesheef_path = "res://assets/atlases/spritesheetf";
-        if FileAccess::file_exists(spritesheef_path.into()) {
+        if FileAccess::file_exists(spritesheef_path) {
             if let Ok(sprite_sheet_root) = root_as_sprite_sheet_root(
-                FileAccess::get_file_as_bytes(spritesheef_path.into()).as_slice(),
+                FileAccess::get_file_as_bytes(spritesheef_path).as_slice(),
             ) {
                 for animated_sprite in sprite_sheet_root.animated_sprites().unwrap() {
                     self.animated_sprites
@@ -93,21 +93,21 @@ impl SpriteSheetDeserializer {
         match atlas_id {
             1 => {
                 if let Some(ground_tiles) = self.ground_tiles.clone() {
-                    atlas_texture.set_atlas(ground_tiles);
+                    atlas_texture.set_atlas(&ground_tiles);
                 } else {
                     return None;
                 }
             }
             2 => {
                 if let Some(characters) = self.characters.clone() {
-                    atlas_texture.set_atlas(characters);
+                    atlas_texture.set_atlas(&characters);
                 } else {
                     return None;
                 }
             }
             4 => {
                 if let Some(map_objects) = self.map_objects.clone() {
-                    atlas_texture.set_atlas(map_objects);
+                    atlas_texture.set_atlas(&map_objects);
                 } else {
                     return None;
                 }
@@ -130,7 +130,7 @@ impl SpriteSheetDeserializer {
         for sprite in &self.animated_sprites {
             if sprite.sprite_sheet_name.eq_ignore_ascii_case(&sprite_sheet) && sprite.index == index
             {
-                array.push(Gd::from_object(RotmgAnimatedTexture {
+                array.push(&Gd::from_object(RotmgAnimatedTexture {
                     set: sprite.set,
                     direction: sprite.direction,
                     action: sprite.action,

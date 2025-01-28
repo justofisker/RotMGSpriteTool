@@ -1,4 +1,4 @@
-use godot::{engine::Image, prelude::*};
+use godot::{classes::Image, prelude::*};
 use webp_animation::prelude::*;
 
 #[derive(GodotClass)]

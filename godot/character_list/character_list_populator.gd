@@ -6,6 +6,7 @@ extends Node
 const ObjectParser = preload("res://parsers/objects/object_parser.gd")
 
 func _ready() -> void:
+	xml_selector.file_selected.connect(_on_native_file_dialog_file_selected)
 	if DirAccess.dir_exists_absolute("./assets/xml/"):
 		xml_selector.root_subfolder = "./assets/xml/"
 	else:

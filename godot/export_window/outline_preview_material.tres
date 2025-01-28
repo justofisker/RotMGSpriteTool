@@ -1,6 +1,6 @@
 [gd_resource type="ShaderMaterial" load_steps=4 format=3 uid="uid://du4id8y1i8pqb"]
 
-[ext_resource type="Shader" path="res://character_list/outline_shader.gdshader" id="1_gttuu"]
+[ext_resource type="Shader" uid="uid://dr6vtiwcajoy2" path="res://character_list/outline_shader.gdshader" id="1_gttuu"]
 
 [sub_resource type="Gradient" id="Gradient_hkib8"]
 interpolation_mode = 2

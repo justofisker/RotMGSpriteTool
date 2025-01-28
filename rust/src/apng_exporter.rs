@@ -1,6 +1,6 @@
 use std::{fs::File, io::BufWriter};
 
-use godot::{engine::Image, prelude::*};
+use godot::{classes::Image, prelude::*};
 use png::{AnimationControl, Encoder};
 
 #[derive(GodotClass)]
@@ -35,7 +35,11 @@ impl ApngExporter {
         });
     }
 
-    fn internal_finalize_and_write(&self, file: File, final_timestamp_ms: u32) -> Result<(), png::EncodingError> {
+    fn internal_finalize_and_write(
+        &self,
+        file: File,
+        final_timestamp_ms: u32,
+    ) -> Result<(), png::EncodingError> {
         let ref mut w = BufWriter::new(file);
 
         let mut info = png::Info::default();
@@ -74,8 +78,7 @@ impl ApngExporter {
             for i in 0..self.frames.len() {
                 writer.set_frame_delay(frame_delays[i] as u16, 1000)?;
 
-                writer
-                    .write_image_data(self.frames[i].image.get_data().as_slice())?;
+                writer.write_image_data(self.frames[i].image.get_data().as_slice())?;
             }
 
             writer.finish()?
