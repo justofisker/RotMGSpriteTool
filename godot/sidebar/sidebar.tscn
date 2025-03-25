@@ -1,0 +1,140 @@
+[gd_scene load_steps=13 format=3 uid="uid://bmror46cmq2yf"]
+
+[ext_resource type="Script" uid="uid://bb5bpce08iqn3" path="res://sidebar/sidebar.gd" id="1_2iws5"]
+[ext_resource type="Texture2D" uid="uid://d27oaefrtp5hl" path="res://sidebar/SidebarBG.png" id="1_dyphw"]
+[ext_resource type="Texture2D" uid="uid://c62mrrmomyh4q" path="res://sidebar/SidebarAnimationPreview.png" id="2_1lw2a"]
+[ext_resource type="Script" uid="uid://byjuw865a83rf" path="res://sidebar/preview_controller.gd" id="3_663wf"]
+[ext_resource type="Texture2D" uid="uid://bge0ogxwxmrx5" path="res://sidebar/Left.png" id="3_sidti"]
+[ext_resource type="Texture2D" uid="uid://bsgpf4ois2yyp" path="res://sidebar/Up.png" id="3_tmxxw"]
+[ext_resource type="Material" uid="uid://bud36ywkxwv5b" path="res://character_list/outline_material.tres" id="5_8k018"]
+[ext_resource type="Texture2D" uid="uid://dawxl61po4164" path="res://sidebar/Right.png" id="5_24g0v"]
+[ext_resource type="Texture2D" uid="uid://boi24rl7trf8h" path="res://sidebar/Idle.png" id="5_663wf"]
+[ext_resource type="Script" uid="uid://dla2frop1iis3" path="res://sidebar/sprite_preview.gd" id="5_uudhy"]
+[ext_resource type="Texture2D" uid="uid://cfltruwahbgk2" path="res://sidebar/Down.png" id="6_663wf"]
+[ext_resource type="PackedScene" uid="uid://cv0bmqk0684rh" path="res://sidebar/animated_sprite_container.tscn" id="10_epp6u"]
+
+[node name="Sidebar" type="Control"]
+custom_minimum_size = Vector2(400, 0)
+layout_mode = 3
+anchors_preset = 11
+anchor_left = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 0
+grow_vertical = 2
+script = ExtResource("1_2iws5")
+
+[node name="NinePatchRect" type="NinePatchRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("1_dyphw")
+patch_margin_left = 61
+patch_margin_top = 61
+patch_margin_right = 61
+patch_margin_bottom = 61
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 30
+theme_override_constants/margin_top = 30
+theme_override_constants/margin_right = 30
+theme_override_constants/margin_bottom = 30
+
+[node name="PreviewWindow" type="NinePatchRect" parent="MarginContainer"]
+custom_minimum_size = Vector2(0, 300)
+layout_mode = 2
+size_flags_vertical = 0
+mouse_filter = 0
+texture = ExtResource("2_1lw2a")
+patch_margin_left = 6
+patch_margin_top = 6
+patch_margin_right = 6
+patch_margin_bottom = 6
+
+[node name="AnimatedSpriteContainer" parent="MarginContainer/PreviewWindow" instance=ExtResource("10_epp6u")]
+layout_mode = 0
+anchors_preset = 0
+
+[node name="Preview" type="AnimatedSprite2D" parent="MarginContainer/PreviewWindow/AnimatedSpriteContainer"]
+unique_name_in_owner = true
+texture_filter = 1
+material = ExtResource("5_8k018")
+position = Vector2(164, 139.77)
+scale = Vector2(11.4, 11.4)
+speed_scale = 0.25
+script = ExtResource("5_uudhy")
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/PreviewWindow"]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -115.0
+offset_bottom = 115.0
+grow_horizontal = 0
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+
+[node name="GridContainer" type="GridContainer" parent="MarginContainer/PreviewWindow/MarginContainer"]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 2
+theme_override_constants/h_separation = 5
+theme_override_constants/v_separation = 5
+columns = 3
+script = ExtResource("3_663wf")
+metadata/_edit_group_ = true
+
+[node name="Spacer" type="Control" parent="MarginContainer/PreviewWindow/MarginContainer/GridContainer"]
+layout_mode = 2
+mouse_filter = 1
+
+[node name="Up" type="TextureButton" parent="MarginContainer/PreviewWindow/MarginContainer/GridContainer"]
+layout_mode = 2
+mouse_filter = 1
+texture_normal = ExtResource("3_tmxxw")
+
+[node name="Spacer2" type="Control" parent="MarginContainer/PreviewWindow/MarginContainer/GridContainer"]
+layout_mode = 2
+mouse_filter = 1
+
+[node name="Left" type="TextureButton" parent="MarginContainer/PreviewWindow/MarginContainer/GridContainer"]
+layout_mode = 2
+mouse_filter = 1
+texture_normal = ExtResource("3_sidti")
+
+[node name="TypeSwitch" type="TextureButton" parent="MarginContainer/PreviewWindow/MarginContainer/GridContainer"]
+layout_mode = 2
+mouse_filter = 1
+texture_normal = ExtResource("5_663wf")
+
+[node name="Right" type="TextureButton" parent="MarginContainer/PreviewWindow/MarginContainer/GridContainer"]
+layout_mode = 2
+mouse_filter = 1
+texture_normal = ExtResource("5_24g0v")
+
+[node name="Spacer3" type="Control" parent="MarginContainer/PreviewWindow/MarginContainer/GridContainer"]
+layout_mode = 2
+mouse_filter = 1
+
+[node name="Down" type="TextureButton" parent="MarginContainer/PreviewWindow/MarginContainer/GridContainer"]
+layout_mode = 2
+mouse_filter = 1
+texture_normal = ExtResource("6_663wf")
+
+[connection signal="mouse_entered" from="MarginContainer/PreviewWindow" to="MarginContainer/PreviewWindow/MarginContainer/GridContainer" method="_on_preview_window_mouse_entered"]
+[connection signal="mouse_exited" from="MarginContainer/PreviewWindow" to="MarginContainer/PreviewWindow/MarginContainer/GridContainer" method="_on_preview_window_mouse_exited"]
+[connection signal="avaliable_directions" from="MarginContainer/PreviewWindow/AnimatedSpriteContainer/Preview" to="MarginContainer/PreviewWindow/MarginContainer/GridContainer" method="_on_preview_avaliable_directions"]
+[connection signal="pressed" from="MarginContainer/PreviewWindow/MarginContainer/GridContainer/Up" to="MarginContainer/PreviewWindow/MarginContainer/GridContainer" method="_on_up_pressed"]
+[connection signal="pressed" from="MarginContainer/PreviewWindow/MarginContainer/GridContainer/Left" to="MarginContainer/PreviewWindow/MarginContainer/GridContainer" method="_on_left_pressed"]
+[connection signal="pressed" from="MarginContainer/PreviewWindow/MarginContainer/GridContainer/TypeSwitch" to="MarginContainer/PreviewWindow/MarginContainer/GridContainer" method="_on_type_switch_pressed"]
+[connection signal="pressed" from="MarginContainer/PreviewWindow/MarginContainer/GridContainer/Right" to="MarginContainer/PreviewWindow/MarginContainer/GridContainer" method="_on_right_pressed"]
+[connection signal="pressed" from="MarginContainer/PreviewWindow/MarginContainer/GridContainer/Down" to="MarginContainer/PreviewWindow/MarginContainer/GridContainer" method="_on_down_pressed"]

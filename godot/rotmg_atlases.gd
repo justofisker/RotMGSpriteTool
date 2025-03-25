@@ -37,14 +37,20 @@ func get_animated_sprites(sprite_sheet_name: String, index: int) -> Array[RotmgA
 			out.push_back(sprite)
 	return out
 
-func get_texture(sprite: RotmgSprite) -> AtlasTexture:
+func get_texture(sprite: RotmgSprite, expand: bool = false) -> AtlasTexture:
 	var texture = AtlasTexture.new()
 	texture.atlas = atlases[sprite.a_id]
 	texture.region = sprite.position
+	if expand:
+		texture.region.position -= Vector2(1, 1)
+		texture.region.size += Vector2(2, 2)
 	return texture
 
-func get_animated_texture(animated_sprite: RotmgAnimatedSprite) -> AtlasTexture:
+func get_animated_texture(animated_sprite: RotmgAnimatedSprite, expand: bool = false) -> AtlasTexture:
 	var texture = AtlasTexture.new()
 	texture.atlas = atlases[animated_sprite.sprite.a_id]
 	texture.region = animated_sprite.sprite.position
+	if expand:
+		texture.region.position -= Vector2(1, 1)
+		texture.region.size += Vector2(2, 2)
 	return texture
