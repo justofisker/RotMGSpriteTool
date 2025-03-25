@@ -14,9 +14,9 @@ func _update_sprite() -> void:
 		return
 	if character.texture.animated:
 		var sprite_frames := SpriteFrames.new()
-		var frames := RotmgAtlases.get_animated_sprite_textures_export(character.texture.file_name, character.texture.index)
+		var frames := RotmgAtlases.get_animated_sprites(character.texture.file_name, character.texture.index)
 		for frame in frames:
-			sprite_frames.add_frame("default", frame)
+			sprite_frames.add_frame("default", RotmgAtlases.get_animated_texture(frame))
 		%Sprite.sprite_frames = sprite_frames
 		%Sprite.play()
 		button.export_data = ExportData.from_animated_textures(RotmgAtlases.get_animated_textures(character.texture.file_name, character.texture.index))

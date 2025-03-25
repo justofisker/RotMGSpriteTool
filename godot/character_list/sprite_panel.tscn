@@ -1,10 +1,10 @@
-[gd_scene load_steps=5 format=3 uid="uid://dmr1ek15issb"]
+[gd_scene load_steps=6 format=3 uid="uid://dmr1ek15issb"]
 
-[ext_resource type="Script" path="res://character_list/sprite_panel.gd" id="1_cu1gw"]
-[ext_resource type="Script" path="res://sidebar/animated_sprite_container.gd" id="2_arh7w"]
+[ext_resource type="Script" uid="uid://dh471rviyhey5" path="res://character_list/sprite_panel.gd" id="1_cu1gw"]
+[ext_resource type="Theme" uid="uid://bd6gnx4uh472s" path="res://theme.tres" id="1_ysna3"]
+[ext_resource type="Texture2D" uid="uid://bfdv4gaopyb0j" path="res://character_list/NinePatchRectBG.png" id="3_0xdc8"]
 [ext_resource type="Material" uid="uid://bud36ywkxwv5b" path="res://character_list/outline_material.tres" id="3_siakx"]
-
-[sub_resource type="SpriteFrames" id="SpriteFrames_ymw84"]
+[ext_resource type="Texture2D" uid="uid://dcbbpdnrxv04f" path="res://character_list/NinePatchRectBGSelected.png" id="4_k1w2n"]
 
 [node name="SpritePanel" type="PanelContainer" node_paths=PackedStringArray("label", "vbox", "sprite")]
 anchors_preset = 15
@@ -16,10 +16,32 @@ grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 0
 size_flags_vertical = 0
+theme = ExtResource("1_ysna3")
+theme_type_variation = &"SpriteListPanel"
 script = ExtResource("1_cu1gw")
 label = NodePath("MarginContainer/VBoxContainer/Label")
 vbox = NodePath("MarginContainer/VBoxContainer")
-sprite = NodePath("MarginContainer/VBoxContainer/SpriteContainer/AnimatedSprite2D")
+sprite = NodePath("MarginContainer/VBoxContainer/Sprite")
+
+[node name="NinePatchRect" type="NinePatchRect" parent="."]
+texture_filter = 1
+layout_mode = 2
+texture = ExtResource("3_0xdc8")
+patch_margin_left = 5
+patch_margin_top = 5
+patch_margin_right = 5
+patch_margin_bottom = 5
+
+[node name="NinePatchRectSelected" type="NinePatchRect" parent="."]
+visible = false
+texture_filter = 1
+layout_mode = 2
+texture = ExtResource("4_k1w2n")
+draw_center = false
+patch_margin_left = 5
+patch_margin_top = 5
+patch_margin_right = 5
+patch_margin_bottom = 5
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
 layout_mode = 2
@@ -31,18 +53,10 @@ theme_override_constants/margin_bottom = 8
 [node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
 layout_mode = 2
 
-[node name="SpriteContainer" type="Control" parent="MarginContainer/VBoxContainer"]
-custom_minimum_size = Vector2(0, 100)
-layout_mode = 2
-size_flags_horizontal = 4
-script = ExtResource("2_arh7w")
-
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="MarginContainer/VBoxContainer/SpriteContainer"]
+[node name="Sprite" type="TextureRect" parent="MarginContainer/VBoxContainer"]
 material = ExtResource("3_siakx")
-position = Vector2(0.155, 0.37)
-scale = Vector2(5, 5)
-sprite_frames = SubResource("SpriteFrames_ymw84")
-centered = false
+layout_mode = 2
+stretch_mode = 5
 
 [node name="Label" type="Label" parent="MarginContainer/VBoxContainer"]
 layout_mode = 2
@@ -52,6 +66,9 @@ horizontal_alignment = 1
 
 [node name="Button" type="Button" parent="."]
 layout_mode = 2
+theme_type_variation = &"ButtonNone"
 flat = true
 
+[connection signal="focus_entered" from="Button" to="." method="_on_button_focus_entered"]
+[connection signal="focus_exited" from="Button" to="." method="_on_button_focus_exited"]
 [connection signal="pressed" from="Button" to="." method="_on_button_pressed"]

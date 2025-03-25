@@ -44,8 +44,9 @@ func _add_frames() -> void:
 	animation_selector.select(animation_selector.selected)
 
 func _on_animation_selector_item_selected(index: int) -> void:
-	%Sprite.play(animation_selector.get_item_text(index))
-	var textures : Array[RotmgTexture] = []
-	for frame in character.animations[index].frames:
-		textures.append(RotmgAtlases.get_texture(frame.file_name, frame.index))
-	export_button.export_data = ExportData.from_texture_time_array(textures, character.animations[index].frame_durations)
+	pass
+	#%Sprite.play(animation_selector.get_item_text(index))
+	#var textures : Array[RotmgTexture] = []
+	#for frame in character.animations[index].frames:
+		#textures.append(RotmgAtlases.get_texture(frame.file_name, frame.index))
+	#export_button.export_data = ExportData.from_texture_time_array(textures, character.animations[index].frame_durations)

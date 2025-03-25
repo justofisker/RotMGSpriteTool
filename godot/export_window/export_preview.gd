@@ -35,7 +35,7 @@ func _resize_texture(texture: Texture2D) -> Texture2D:
 	atlas_tex.region.position -= Vector2(padding, padding)
 	return atlas_tex
 
-func _resize_textures(textures: Array[RotmgTexture]) -> Array[Texture2D]:
+func _resize_textures(textures: Array[RotmgSprite]) -> Array[Texture2D]:
 	var padding := _get_padding()
 	var extents := Vector2i()
 	for texture in textures:
@@ -49,7 +49,7 @@ func _resize_textures(textures: Array[RotmgTexture]) -> Array[Texture2D]:
 	
 	for idx in textures.size():
 		if is_instance_valid(textures[idx]):
-			var atlas_tex: AtlasTexture = textures[idx].texture.duplicate()
+			var atlas_tex: AtlasTexture = RotmgAtlases.get_texture(textures[idx])
 			atlas_tex.region.size += Vector2(padding * 2, padding * 2)
 			atlas_tex.region.position -= Vector2(padding, padding)
 			out_textures.append(atlas_tex)
@@ -65,13 +65,13 @@ func _texture_to_sprite(texture: Texture2D) -> Sprite2D:
 	sprite.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	return sprite
 
-func _animated_textures_to_sprite_container(animated_textures: Array[RotmgAnimatedTexture]) -> Control:
-	var textures : Array[RotmgTexture] = []
-	for texture in animated_textures:
-		textures.push_back(texture.texture)
+func _animated_textures_to_sprite_container(animated_sprites: Array[RotmgAnimatedSprite]) -> Control:
+	var textures : Array[AtlasTexture] = []
+	for sprite in animated_sprites:
+		textures.push_back(RotmgAtlases.get_animated_texture(sprite))
 	return _textures_to_sprite_container(textures)
 
-func _textures_to_sprite_container(textures: Array[RotmgTexture], durations: PackedFloat32Array = []) -> Control:
+func _textures_to_sprite_container(textures: Array[Texture2D], durations: PackedFloat32Array = []) -> Control:
 	if durations.size() == 0:
 		durations.resize(textures.size())
 		durations.fill(1.0 / durations.size())
@@ -144,7 +144,7 @@ func setup_texture(texture: RotmgTexture) -> void:
 	var height := sprite.texture.get_height()
 	camera.extents = Vector4(-width / 2.0, -height / 2.0, width / 2.0, height / 2.0)
 
-func setup_animated_texture(textures: Array[RotmgAnimatedTexture]) -> void:
+func setup_animated_texture(sprites: Array[RotmgAnimatedSprite]) -> void:
 	_clear_sprites()
 	_set_shader()
 	
@@ -158,9 +158,9 @@ func setup_animated_texture(textures: Array[RotmgAnimatedTexture]) -> void:
 	var actions : PackedInt32Array = []
 	var directions : PackedInt32Array = []
 	
-	for idx in textures.size():
-		var action := textures[idx].action
-		var direction := textures[idx].direction
+	for idx in sprites.size():
+		var action := sprites[idx].action
+		var direction := sprites[idx].direction
 		var key : int = get_key.call(action, direction)
 		if !actions.has(action):
 			actions.push_back(action)
@@ -183,7 +183,7 @@ func setup_animated_texture(textures: Array[RotmgAnimatedTexture]) -> void:
 	
 	var max_size := Vector2i()
 	var resized_textures : Array[Texture2D] = []
-	for texture in textures:
+	for sprite in sprites:
 		var tex := _resize_texture(texture.texture.texture)
 		max_size.x = maxi(max_size.x, tex.get_width())
 		max_size.y = maxi(max_size.y, tex.get_height())

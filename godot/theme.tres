@@ -1,0 +1,21 @@
+[gd_resource type="Theme" load_steps=6 format=3 uid="uid://bd6gnx4uh472s"]
+
+[ext_resource type="FontFile" uid="uid://din2q5og5ttcb" path="res://font/ChronoType/ChronoType.ttf" id="1_e1x85"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_e1x85"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_cjfk0"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_vj6dk"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_wvktn"]
+
+[resource]
+default_font = ExtResource("1_e1x85")
+default_font_size = 20
+ButtonNone/base_type = &"Button"
+ButtonNone/styles/focus = SubResource("StyleBoxEmpty_e1x85")
+ButtonNone/styles/hover = SubResource("StyleBoxEmpty_cjfk0")
+ButtonNone/styles/normal = SubResource("StyleBoxEmpty_vj6dk")
+SpriteListPanel/base_type = &"PanelContainer"
+SpriteListPanel/styles/panel = SubResource("StyleBoxEmpty_wvktn")

@@ -3,16 +3,24 @@ class_name TextureXml extends Resource
 var file_name: String
 var index: int
 var animated: bool
-var texture: RotmgTexture :
+var sprite: RotmgSprite :
 	get:
-		if is_instance_valid(texture):
-			return texture
-		texture = RotmgAtlases.get_texture(file_name, index)
-		return texture
-
-var texture_export: Texture2D :
+		if animated:
+			printerr("Tried to get Sprite for an AnimatedTexture (%s:%i)" % [ file_name, index ])
+			return null
+		if is_instance_valid(sprite):
+			return sprite
+		sprite = RotmgAtlases.get_sprite(file_name, index)
+		return sprite
+var animated_sprites: Array[RotmgAnimatedSprite] :
 	get:
-		return RotmgAtlases.get_texture_export(file_name, index)
+		if !animated:
+			printerr("Tried to get AnimatedSprite for an Texture (%s:%i)" % [ file_name, index ])
+			return []
+		if is_instance_valid(animated_sprites):
+			return animated_sprites
+		animated_sprites = RotmgAtlases.get_animated_sprites(file_name, index)
+		return animated_sprites
 
 static func parse(p: SimpleXmlParser) -> TextureXml:
 	var t := TextureXml.new()

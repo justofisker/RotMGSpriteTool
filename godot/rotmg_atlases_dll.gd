@@ -1,38 +1,38 @@
-extends SpriteSheetDeserializer
+extends Node
 
-func get_animated_sprite_textures_export(sprite_sheet: String, index: int) -> Array[Texture2D]:
-	var frames : Array[RotmgAnimatedTexture] = get_animated_textures(sprite_sheet, index)
-	
-	var out : Array[Texture2D] = []
-	
-	var outline_size := 1
-	var export_scale := 5
-	
-	for frame in frames:
-		if !is_instance_valid(frame.texture) || !is_instance_valid(frame.texture.texture):
-			push_error("Invalid texture!")
-			continue
-		var tex : AtlasTexture = frame.texture.texture.duplicate()
-		if outline_size != 0:
-			tex.region.position.x -= ceilf(float(outline_size) / export_scale)
-			tex.region.position.y -= ceilf(float(outline_size) / export_scale)
-			tex.region.size.x += ceilf(float(outline_size) / export_scale) * 2
-			tex.region.size.y += ceilf(float(outline_size) / export_scale) * 2
-		out.push_back(tex)
-	
+@onready var spritesheetf := SpriteSheetDeserializer.open("res://assets/atlases/spritesheetf")
+@onready var atlases : Array[Texture2D] = [
+		null,
+		load("res://assets/atlases/groundTiles.png"),
+		load("res://assets/atlases/characters.png"),
+		load("res://assets/atlases/characters_masks.png"),
+		load("res://assets/atlases/mapObjects.png")
+	]
+
+func get_sprite(sprite_sheet_name: String, index: int) -> RotmgSprite:
+	for sprite_sheet in spritesheetf.sprite_sheets:
+		if sprite_sheet.sprite_sheet_name == sprite_sheet_name:
+			for sprite in sprite_sheet.sprites:
+				if sprite.index == index:
+					return sprite
+	push_warning("Failed to find sprite for " + sprite_sheet_name + ":" + str(index))
+	return null
+
+func get_animated_sprites(sprite_sheet_name: String, index: int) -> Array[RotmgAnimatedSprite]:
+	var out : Array[RotmgAnimatedSprite]
+	for sprite in spritesheetf.animated_sprites:
+		if sprite.sprite_sheet_name == sprite_sheet_name && sprite.index == index:
+			out.push_back(sprite)
 	return out
 
-func get_texture_export(sprite_sheet: String, index: int) -> AtlasTexture:
-	var rotmg_texture : RotmgTexture = get_texture(sprite_sheet, index)
-	if !is_instance_valid(rotmg_texture) || !is_instance_valid(rotmg_texture.texture):
-			push_error("Invalid texture!")
-			return null
-	var tex := rotmg_texture.texture
-	var outline_size := 1
-	var export_scale := 5
-	if outline_size != 0:
-		tex.region.position.x -= ceilf(float(outline_size) / export_scale)
-		tex.region.position.y -= ceilf(float(outline_size) / export_scale)
-		tex.region.size.x += ceilf(float(outline_size) / export_scale) * 2
-		tex.region.size.y += ceilf(float(outline_size) / export_scale) * 2
-	return tex
+func get_texture(sprite: RotmgSprite) -> AtlasTexture:
+	var texture = AtlasTexture.new()
+	texture.atlas = atlases[sprite.a_id]
+	texture.region = sprite.position
+	return texture
+
+func get_animated_texture(animated_sprite: RotmgAnimatedSprite) -> AtlasTexture:
+	var texture = AtlasTexture.new()
+	texture.atlas = atlases[animated_sprite.sprite.a_id]
+	texture.region = animated_sprite.sprite.position
+	return texture
