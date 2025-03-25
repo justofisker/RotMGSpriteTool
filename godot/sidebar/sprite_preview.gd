@@ -30,10 +30,9 @@ func _update_sprite():
 			av_directions.push_back(sprite.direction)
 		if sprite.direction == direction && sprite.action == action:
 			frames.push_back(RotmgAtlases.get_animated_texture(sprite, true))
+	print(av_directions)
 	avaliable_directions.emit(av_directions)
-	if direction == 0 && action == 1:
-		if frames.size() > 2:
-			frames.pop_front()
+	# Sometimes you need to remove a frame from walking animation idk
 	sprite_frames = SpriteFrames.new()
 	for frame in frames:
 		sprite_frames.add_frame("default", frame, 1.0 / frames.size())

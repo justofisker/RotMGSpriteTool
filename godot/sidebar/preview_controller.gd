@@ -37,7 +37,7 @@ func _on_right_pressed() -> void:
 	%Preview.flip_h = false
 
 func _on_down_pressed() -> void:
-	%Preview.direction = 1
+	%Preview.direction = 3
 	%Preview.flip_h = false
 
 @onready var container: Control = $"."
@@ -73,13 +73,13 @@ func _on_preview_avaliable_directions(directions: Array[int]) -> void:
 		left.modulate = Color(1, 1, 1, 0.5)
 		right.disabled = true
 		right.modulate = Color(1, 1, 1, 0.5)
-	if directions.find(1) != -1:
+	if directions.find(2) != -1:
 		up.disabled = false
 		up.modulate = Color.WHITE
 	else:
 		up.disabled = true
 		up.modulate = Color(1, 1, 1, 0.5)
-	if directions.find(2) != -1:
+	if directions.find(3) != -1:
 		down.disabled = false
 		down.modulate = Color.WHITE
 	else:

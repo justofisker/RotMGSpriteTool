@@ -63,6 +63,10 @@ patch_margin_bottom = 6
 [node name="AnimatedSpriteContainer" parent="MarginContainer/PreviewWindow" instance=ExtResource("10_epp6u")]
 layout_mode = 0
 anchors_preset = 0
+anchor_right = 0.0
+anchor_bottom = 0.0
+grow_horizontal = 1
+grow_vertical = 1
 
 [node name="Preview" type="AnimatedSprite2D" parent="MarginContainer/PreviewWindow/AnimatedSpriteContainer"]
 unique_name_in_owner = true
