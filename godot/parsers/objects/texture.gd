@@ -6,7 +6,7 @@ var animated: bool
 var sprite: RotmgSprite :
 	get:
 		if animated:
-			printerr("Tried to get Sprite for an AnimatedTexture (%s:%i)" % [ file_name, index ])
+			printerr("Tried to get Sprite for an AnimatedTexture (%s:%d)" % [ file_name, index ])
 			return null
 		if is_instance_valid(sprite):
 			return sprite
@@ -15,7 +15,7 @@ var sprite: RotmgSprite :
 var animated_sprites: Array[RotmgAnimatedSprite] :
 	get:
 		if !animated:
-			printerr("Tried to get AnimatedSprite for an Texture (%s:%i)" % [ file_name, index ])
+			printerr("Tried to get AnimatedSprite for an Texture (%s:%d)" % [ file_name, index ])
 			return []
 		if is_instance_valid(animated_sprites):
 			return animated_sprites

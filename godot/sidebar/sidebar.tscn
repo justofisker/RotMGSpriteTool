@@ -61,20 +61,15 @@ patch_margin_right = 6
 patch_margin_bottom = 6
 
 [node name="AnimatedSpriteContainer" parent="MarginContainer/PreviewWindow" instance=ExtResource("10_epp6u")]
-layout_mode = 0
-anchors_preset = 0
-anchor_right = 0.0
-anchor_bottom = 0.0
-grow_horizontal = 1
-grow_vertical = 1
+layout_mode = 1
 
 [node name="Preview" type="AnimatedSprite2D" parent="MarginContainer/PreviewWindow/AnimatedSpriteContainer"]
 unique_name_in_owner = true
 texture_filter = 1
 material = ExtResource("5_8k018")
-position = Vector2(164, 139.77)
-scale = Vector2(11.4, 11.4)
+scale = Vector2(7.43, 7.43)
 speed_scale = 0.25
+centered = false
 script = ExtResource("5_uudhy")
 
 [node name="MarginContainer" type="MarginContainer" parent="MarginContainer/PreviewWindow"]
@@ -136,7 +131,7 @@ texture_normal = ExtResource("6_663wf")
 
 [connection signal="mouse_entered" from="MarginContainer/PreviewWindow" to="MarginContainer/PreviewWindow/MarginContainer/GridContainer" method="_on_preview_window_mouse_entered"]
 [connection signal="mouse_exited" from="MarginContainer/PreviewWindow" to="MarginContainer/PreviewWindow/MarginContainer/GridContainer" method="_on_preview_window_mouse_exited"]
-[connection signal="avaliable_directions" from="MarginContainer/PreviewWindow/AnimatedSpriteContainer/Preview" to="MarginContainer/PreviewWindow/MarginContainer/GridContainer" method="_on_preview_avaliable_directions"]
+[connection signal="animation_changed" from="MarginContainer/PreviewWindow/AnimatedSpriteContainer/Preview" to="MarginContainer/PreviewWindow/MarginContainer/GridContainer" method="_on_preview_animation_changed"]
 [connection signal="pressed" from="MarginContainer/PreviewWindow/MarginContainer/GridContainer/Up" to="MarginContainer/PreviewWindow/MarginContainer/GridContainer" method="_on_up_pressed"]
 [connection signal="pressed" from="MarginContainer/PreviewWindow/MarginContainer/GridContainer/Left" to="MarginContainer/PreviewWindow/MarginContainer/GridContainer" method="_on_left_pressed"]
 [connection signal="pressed" from="MarginContainer/PreviewWindow/MarginContainer/GridContainer/TypeSwitch" to="MarginContainer/PreviewWindow/MarginContainer/GridContainer" method="_on_type_switch_pressed"]

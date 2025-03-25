@@ -62,26 +62,26 @@ func _on_preview_window_mouse_exited() -> void:
 @onready var left: TextureButton = $Left
 @onready var right: TextureButton = $Right
 @onready var down: TextureButton = $Down
-func _on_preview_avaliable_directions(directions: Array[int]) -> void:
-	if directions.find(0) != -1:
-		left.disabled = false
-		left.modulate = Color.WHITE
-		right.disabled = false
-		right.modulate = Color.WHITE
+
+func _on_preview_animation_changed() -> void:
+	var disable = func(btn: TextureButton) -> void:
+		btn.disabled = true
+		btn.modulate = Color(1, 1, 1, 0.5)
+	var enable = func(btn: TextureButton) -> void:
+		btn.disabled = false
+		btn.modulate = Color.WHITE
+	
+	if %Preview.sprite_frames.has_animation("A%dD0" % type):
+		enable.call(left)
+		enable.call(right)
 	else:
-		left.disabled = true
-		left.modulate = Color(1, 1, 1, 0.5)
-		right.disabled = true
-		right.modulate = Color(1, 1, 1, 0.5)
-	if directions.find(2) != -1:
-		up.disabled = false
-		up.modulate = Color.WHITE
+		disable.call(left)
+		disable.call(right)
+	if %Preview.sprite_frames.has_animation("A%dD2" % type):
+		enable.call(up)
 	else:
-		up.disabled = true
-		up.modulate = Color(1, 1, 1, 0.5)
-	if directions.find(3) != -1:
-		down.disabled = false
-		down.modulate = Color.WHITE
+		disable.call(up)
+	if %Preview.sprite_frames.has_animation("A%dD3" % type):
+		enable.call(down)
 	else:
-		down.disabled = true
-		down.modulate = Color(1, 1, 1, 0.5)
+		disable.call(down)

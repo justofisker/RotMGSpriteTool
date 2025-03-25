@@ -3,12 +3,12 @@ extends AnimatedSprite2D
 var direction: int :
 	set(dir):
 		direction = dir
-		_update_sprite()
+		play("A%dD%d" % [action, direction])
 
 var action: int :
 	set(act):
 		action = act
-		_update_sprite()
+		play("A%dD%d" % [action, direction])
 
 var texture: TextureXml :
 	set(tex):
@@ -22,18 +22,24 @@ signal avaliable_directions(directions: Array[int])
 func _update_sprite():
 	if !texture:
 		return
-	var frames : Array[Texture2D]
 	var sprites := texture.animated_sprites
-	var av_directions : Array[int]
+	var animations := {}
 	for sprite in sprites:
-		if av_directions.find(sprite.direction) == -1:
-			av_directions.push_back(sprite.direction)
-		if sprite.direction == direction && sprite.action == action:
-			frames.push_back(RotmgAtlases.get_animated_texture(sprite, true))
-	print(av_directions)
-	avaliable_directions.emit(av_directions)
-	# Sometimes you need to remove a frame from walking animation idk
-	sprite_frames = SpriteFrames.new()
-	for frame in frames:
-		sprite_frames.add_frame("default", frame, 1.0 / frames.size())
-	play()
+		var cur_frames : Array = animations.get_or_add("A%dD%d" % [sprite.action, sprite.direction], [])
+		cur_frames.push_back(RotmgAtlases.get_animated_texture(sprite, true))
+		animations["A%dD%d" % [sprite.action, sprite.direction]] = cur_frames
+	# Evil and fucked up extra walk animation
+	for d in [0, 2, 3]:
+		if animations.has("A1D%d" % d) && animations.has("A2D%d" % d):
+			var walk : Array = animations["A1D%d" % d]
+			var attack : Array = animations["A2D%d" % d]
+			while walk.size() > attack.size():
+				walk.pop_front()
+	var frames = SpriteFrames.new()
+	for anim_name in animations.keys():
+		frames.add_animation(anim_name)
+		var anim : Array = animations[anim_name]
+		for tex in anim:
+			frames.add_frame(anim_name, tex, 1.0 / anim.size())
+	sprite_frames = frames
+	play("A%dD%d" % [action, direction])
