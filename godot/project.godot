@@ -18,7 +18,7 @@ config/icon="res://icon.svg"
 
 [autoload]
 
-RotmgAtlases="*res://rotmg_atlases_dll.gd"
+RotmgAtlases="*res://rotmg_atlases.gd"
 GlobalSettings="*res://global_settings.gd"
 
 [display]

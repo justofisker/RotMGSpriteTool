@@ -3,7 +3,7 @@ extends PanelContainer
 @export var label: Label
 @export var vbox: VBoxContainer
 @export var sprite: TextureRect
-@onready var nine_patch_rect_selected: NinePatchRect = $NinePatchRectSelected
+@onready var background_selected: NinePatchRect = $BackgroundSelected
 
 var character: Character :
 	set(value):
@@ -33,9 +33,8 @@ func _on_button_pressed() -> void:
 	return
 	get_tree().get_first_node_in_group("sidebar").character = character
 
-
 func _on_button_focus_entered() -> void:
-	nine_patch_rect_selected.visible = true
+	background_selected.visible = true
 
 func _on_button_focus_exited() -> void:
-	nine_patch_rect_selected.visible = false
+	background_selected.visible = false

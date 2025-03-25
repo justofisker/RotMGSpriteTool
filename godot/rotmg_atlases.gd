@@ -1,13 +1,25 @@
 extends Node
 
 @onready var spritesheetf := SpriteSheetDeserializer.open("res://assets/atlases/spritesheetf")
-@onready var atlases : Array[Texture2D] = [
-		null,
-		load("res://assets/atlases/groundTiles.png"),
-		load("res://assets/atlases/characters.png"),
-		load("res://assets/atlases/characters_masks.png"),
-		load("res://assets/atlases/mapObjects.png")
-	]
+@onready var atlases : Array[Texture2D]
+
+func _ready() -> void:
+	if OS.has_feature("editor"):
+		atlases = [
+			null,
+			load("res://assets/atlases/groundTiles.png"),
+			load("res://assets/atlases/characters.png"),
+			load("res://assets/atlases/characters_masks.png"),
+			load("res://assets/atlases/mapObjects.png")
+		]
+	else:
+		atlases = [
+			null,
+			ImageTexture.create_from_image(Image.load_from_file("res://assets/atlases/groundTiles.png")),
+			ImageTexture.create_from_image(Image.load_from_file("res://assets/atlases/characters.png")),
+			ImageTexture.create_from_image(Image.load_from_file("res://assets/atlases/characters_masks.png")),
+			ImageTexture.create_from_image(Image.load_from_file("res://assets/atlases/mapObjects.png")),
+		]
 
 func get_sprite(sprite_sheet_name: String, index: int) -> RotmgSprite:
 	for sprite_sheet in spritesheetf.sprite_sheets:

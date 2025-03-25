@@ -23,7 +23,7 @@ label = NodePath("MarginContainer/VBoxContainer/Label")
 vbox = NodePath("MarginContainer/VBoxContainer")
 sprite = NodePath("MarginContainer/VBoxContainer/Sprite")
 
-[node name="NinePatchRect" type="NinePatchRect" parent="."]
+[node name="Background" type="NinePatchRect" parent="."]
 texture_filter = 1
 layout_mode = 2
 texture = ExtResource("3_0xdc8")
@@ -32,7 +32,7 @@ patch_margin_top = 5
 patch_margin_right = 5
 patch_margin_bottom = 5
 
-[node name="NinePatchRectSelected" type="NinePatchRect" parent="."]
+[node name="BackgroundSelected" type="NinePatchRect" parent="."]
 visible = false
 texture_filter = 1
 layout_mode = 2

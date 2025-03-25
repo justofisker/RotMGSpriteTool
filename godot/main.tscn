@@ -25,33 +25,41 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="VBoxContainer" type="HBoxContainer" parent="."]
+[node name="SmoothScrollContainer" type="ScrollContainer" parent="."]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-
-[node name="SmoothScrollContainer" type="ScrollContainer" parent="VBoxContainer"]
-layout_mode = 2
 size_flags_horizontal = 3
 script = ExtResource("2_x8vvr")
 wheel_scroll_damper = SubResource("Resource_6f7kp")
 dragging_scroll_damper = SubResource("Resource_j2dyl")
 drag_with_mouse = false
 
-[node name="CharacterList" type="HFlowContainer" parent="VBoxContainer/SmoothScrollContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="SmoothScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="CharacterList" type="HFlowContainer" parent="SmoothScrollContainer/MarginContainer"]
 texture_filter = 1
 layout_mode = 2
 size_flags_horizontal = 3
+theme_override_constants/h_separation = 10
+theme_override_constants/v_separation = 10
 
-[node name="CharacterListPopulator" type="Node" parent="VBoxContainer/SmoothScrollContainer/CharacterList" node_paths=PackedStringArray("xml_selector")]
+[node name="CharacterListPopulator" type="Node" parent="SmoothScrollContainer/MarginContainer/CharacterList" node_paths=PackedStringArray("xml_selector")]
 script = ExtResource("4_7rkx3")
 sprite_panel = ExtResource("5_2gion")
 xml_selector = NodePath("NativeFileDialog")
 
-[node name="NativeFileDialog" type="NativeFileDialog" parent="VBoxContainer/SmoothScrollContainer/CharacterList/CharacterListPopulator"]
+[node name="NativeFileDialog" type="NativeFileDialog" parent="SmoothScrollContainer/MarginContainer/CharacterList/CharacterListPopulator"]
 title = "Open a File"
 file_mode = 0
 access = 2
