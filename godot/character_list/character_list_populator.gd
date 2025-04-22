@@ -15,6 +15,10 @@ func _ready() -> void:
 	xml_selector.show()
 
 func _on_native_file_dialog_file_selected(path: String) -> void:
+	var children := get_parent().get_children(false)
+	children.remove_at(children.find(self))
+	for child in children:
+		get_parent().remove_child(child)
 	var parser := ObjectParser.new()
 	var characters := parser.parse_objects(path)
 	
@@ -22,3 +26,6 @@ func _on_native_file_dialog_file_selected(path: String) -> void:
 		var panel = sprite_panel.instantiate()
 		panel.character = c
 		get_parent().add_child.call_deferred(panel)
+
+func _on_sidebar_open_new_file() -> void:
+	xml_selector.show()

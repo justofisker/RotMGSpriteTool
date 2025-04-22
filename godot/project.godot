@@ -36,6 +36,10 @@ enabled=PackedStringArray("res://addons/SmoothScroll/plugin.cfg", "res://addons/
 import/blender/enabled=false
 import/fbx/enabled=false
 
+[gui]
+
+theme/custom="uid://bd6gnx4uh472s"
+
 [rendering]
 
 renderer/rendering_method="mobile"

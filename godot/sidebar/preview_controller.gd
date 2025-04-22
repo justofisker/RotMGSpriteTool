@@ -31,10 +31,12 @@ func _on_up_pressed() -> void:
 func _on_left_pressed() -> void:
 	%Preview.direction = 0
 	%Preview.flip_h = true
+	%Preview.get_parent()._reposition_hflip()
 
 func _on_right_pressed() -> void:
 	%Preview.direction = 0
 	%Preview.flip_h = false
+	%Preview.get_parent()._reposition_hflip()
 
 func _on_down_pressed() -> void:
 	%Preview.direction = 3

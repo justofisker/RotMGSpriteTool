@@ -1,0 +1,39 @@
+[gd_scene load_steps=3 format=3 uid="uid://b4gytb0ptaum7"]
+
+[ext_resource type="Texture2D" uid="uid://oicsk7uskbyd" path="res://common_gui/ButtonBG.png" id="1_40g8s"]
+[ext_resource type="Texture2D" uid="uid://byqmu824gmtwa" path="res://common_gui/ButtonBGHover.png" id="2_xy3ba"]
+
+[node name="Button" type="Button"]
+offset_right = 275.0
+offset_bottom = 47.0
+theme_type_variation = &"ButtonGame"
+text = "Load XML"
+flat = true
+
+[node name="BG" type="NinePatchRect" parent="."]
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("1_40g8s")
+patch_margin_left = 6
+patch_margin_top = 6
+patch_margin_right = 6
+patch_margin_bottom = 11
+
+[node name="BGHover" type="NinePatchRect" parent="."]
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_xy3ba")
+patch_margin_left = 6
+patch_margin_top = 6
+patch_margin_right = 6
+patch_margin_bottom = 11

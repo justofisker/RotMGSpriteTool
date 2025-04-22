@@ -75,3 +75,5 @@ layout_mode = 2
 
 [node name="DPIScale" type="Node" parent="."]
 script = ExtResource("5_lquwl")
+
+[connection signal="open_new_file" from="HBoxContainer/Sidebar" to="HBoxContainer/SmoothScrollContainer/MarginContainer/CharacterList/CharacterListPopulator" method="_on_sidebar_open_new_file"]
