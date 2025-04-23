@@ -23,6 +23,9 @@ func _on_sprite_frames_changed() -> void:
 func _reposition_hflip() -> void:
 	if sprite.flip_h:
 		var tex = sprite.sprite_frames.get_frame_texture(sprite.animation, sprite.frame)
+		if !is_instance_valid(tex):
+			push_error("Invalid texture!")
+			return
 		sprite.position.x = (max_size.x - tex.get_width()) * sprite.scale.x
 		return
 	sprite.position = (size - sprite.scale * Vector2(max_size)) / 2.0

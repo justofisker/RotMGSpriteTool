@@ -76,7 +76,7 @@ speed_scale = 0.25
 centered = false
 script = ExtResource("5_uudhy")
 
-[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/PreviewWindow"]
+[node name="SpritePreviewControls" type="MarginContainer" parent="MarginContainer/VBoxContainer/PreviewWindow"]
 layout_mode = 1
 anchors_preset = 1
 anchor_left = 1.0
@@ -87,7 +87,7 @@ grow_horizontal = 0
 theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 
-[node name="GridContainer" type="GridContainer" parent="MarginContainer/VBoxContainer/PreviewWindow/MarginContainer"]
+[node name="GridContainer" type="GridContainer" parent="MarginContainer/VBoxContainer/PreviewWindow/SpritePreviewControls"]
 modulate = Color(1, 1, 1, 0)
 layout_mode = 2
 theme_override_constants/h_separation = 5
@@ -96,39 +96,39 @@ columns = 3
 script = ExtResource("3_663wf")
 metadata/_edit_group_ = true
 
-[node name="Spacer" type="Control" parent="MarginContainer/VBoxContainer/PreviewWindow/MarginContainer/GridContainer"]
+[node name="Spacer" type="Control" parent="MarginContainer/VBoxContainer/PreviewWindow/SpritePreviewControls/GridContainer"]
 layout_mode = 2
 mouse_filter = 1
 
-[node name="Up" type="TextureButton" parent="MarginContainer/VBoxContainer/PreviewWindow/MarginContainer/GridContainer"]
+[node name="Up" type="TextureButton" parent="MarginContainer/VBoxContainer/PreviewWindow/SpritePreviewControls/GridContainer"]
 layout_mode = 2
 mouse_filter = 1
 texture_normal = ExtResource("3_tmxxw")
 
-[node name="Spacer2" type="Control" parent="MarginContainer/VBoxContainer/PreviewWindow/MarginContainer/GridContainer"]
+[node name="Spacer2" type="Control" parent="MarginContainer/VBoxContainer/PreviewWindow/SpritePreviewControls/GridContainer"]
 layout_mode = 2
 mouse_filter = 1
 
-[node name="Left" type="TextureButton" parent="MarginContainer/VBoxContainer/PreviewWindow/MarginContainer/GridContainer"]
+[node name="Left" type="TextureButton" parent="MarginContainer/VBoxContainer/PreviewWindow/SpritePreviewControls/GridContainer"]
 layout_mode = 2
 mouse_filter = 1
 texture_normal = ExtResource("3_sidti")
 
-[node name="TypeSwitch" type="TextureButton" parent="MarginContainer/VBoxContainer/PreviewWindow/MarginContainer/GridContainer"]
+[node name="TypeSwitch" type="TextureButton" parent="MarginContainer/VBoxContainer/PreviewWindow/SpritePreviewControls/GridContainer"]
 layout_mode = 2
 mouse_filter = 1
 texture_normal = ExtResource("5_663wf")
 
-[node name="Right" type="TextureButton" parent="MarginContainer/VBoxContainer/PreviewWindow/MarginContainer/GridContainer"]
+[node name="Right" type="TextureButton" parent="MarginContainer/VBoxContainer/PreviewWindow/SpritePreviewControls/GridContainer"]
 layout_mode = 2
 mouse_filter = 1
 texture_normal = ExtResource("5_24g0v")
 
-[node name="Spacer3" type="Control" parent="MarginContainer/VBoxContainer/PreviewWindow/MarginContainer/GridContainer"]
+[node name="Spacer3" type="Control" parent="MarginContainer/VBoxContainer/PreviewWindow/SpritePreviewControls/GridContainer"]
 layout_mode = 2
 mouse_filter = 1
 
-[node name="Down" type="TextureButton" parent="MarginContainer/VBoxContainer/PreviewWindow/MarginContainer/GridContainer"]
+[node name="Down" type="TextureButton" parent="MarginContainer/VBoxContainer/PreviewWindow/SpritePreviewControls/GridContainer"]
 layout_mode = 2
 mouse_filter = 1
 texture_normal = ExtResource("6_663wf")
@@ -142,12 +142,13 @@ theme_override_constants/margin_right = 40
 [node name="Button" parent="MarginContainer/MarginContainer" instance=ExtResource("13_7m4d1")]
 layout_mode = 2
 
-[connection signal="mouse_entered" from="MarginContainer/VBoxContainer/PreviewWindow" to="MarginContainer/VBoxContainer/PreviewWindow/MarginContainer/GridContainer" method="_on_preview_window_mouse_entered"]
-[connection signal="mouse_exited" from="MarginContainer/VBoxContainer/PreviewWindow" to="MarginContainer/VBoxContainer/PreviewWindow/MarginContainer/GridContainer" method="_on_preview_window_mouse_exited"]
-[connection signal="animation_changed" from="MarginContainer/VBoxContainer/PreviewWindow/AnimatedSpriteContainer/Preview" to="MarginContainer/VBoxContainer/PreviewWindow/MarginContainer/GridContainer" method="_on_preview_animation_changed"]
-[connection signal="pressed" from="MarginContainer/VBoxContainer/PreviewWindow/MarginContainer/GridContainer/Up" to="MarginContainer/VBoxContainer/PreviewWindow/MarginContainer/GridContainer" method="_on_up_pressed"]
-[connection signal="pressed" from="MarginContainer/VBoxContainer/PreviewWindow/MarginContainer/GridContainer/Left" to="MarginContainer/VBoxContainer/PreviewWindow/MarginContainer/GridContainer" method="_on_left_pressed"]
-[connection signal="pressed" from="MarginContainer/VBoxContainer/PreviewWindow/MarginContainer/GridContainer/TypeSwitch" to="MarginContainer/VBoxContainer/PreviewWindow/MarginContainer/GridContainer" method="_on_type_switch_pressed"]
-[connection signal="pressed" from="MarginContainer/VBoxContainer/PreviewWindow/MarginContainer/GridContainer/Right" to="MarginContainer/VBoxContainer/PreviewWindow/MarginContainer/GridContainer" method="_on_right_pressed"]
-[connection signal="pressed" from="MarginContainer/VBoxContainer/PreviewWindow/MarginContainer/GridContainer/Down" to="MarginContainer/VBoxContainer/PreviewWindow/MarginContainer/GridContainer" method="_on_down_pressed"]
+[connection signal="mouse_entered" from="MarginContainer/VBoxContainer/PreviewWindow" to="MarginContainer/VBoxContainer/PreviewWindow/SpritePreviewControls/GridContainer" method="_on_preview_window_mouse_entered"]
+[connection signal="mouse_exited" from="MarginContainer/VBoxContainer/PreviewWindow" to="MarginContainer/VBoxContainer/PreviewWindow/SpritePreviewControls/GridContainer" method="_on_preview_window_mouse_exited"]
+[connection signal="animation_changed" from="MarginContainer/VBoxContainer/PreviewWindow/AnimatedSpriteContainer/Preview" to="MarginContainer/VBoxContainer/PreviewWindow/SpritePreviewControls/GridContainer" method="_on_preview_animation_changed"]
+[connection signal="sprite_frames_changed" from="MarginContainer/VBoxContainer/PreviewWindow/AnimatedSpriteContainer/Preview" to="MarginContainer/VBoxContainer/PreviewWindow/SpritePreviewControls/GridContainer" method="_on_preview_sprite_frames_changed"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/PreviewWindow/SpritePreviewControls/GridContainer/Up" to="MarginContainer/VBoxContainer/PreviewWindow/SpritePreviewControls/GridContainer" method="_on_up_pressed"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/PreviewWindow/SpritePreviewControls/GridContainer/Left" to="MarginContainer/VBoxContainer/PreviewWindow/SpritePreviewControls/GridContainer" method="_on_left_pressed"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/PreviewWindow/SpritePreviewControls/GridContainer/TypeSwitch" to="MarginContainer/VBoxContainer/PreviewWindow/SpritePreviewControls/GridContainer" method="_on_type_switch_pressed"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/PreviewWindow/SpritePreviewControls/GridContainer/Right" to="MarginContainer/VBoxContainer/PreviewWindow/SpritePreviewControls/GridContainer" method="_on_right_pressed"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/PreviewWindow/SpritePreviewControls/GridContainer/Down" to="MarginContainer/VBoxContainer/PreviewWindow/SpritePreviewControls/GridContainer" method="_on_down_pressed"]
 [connection signal="pressed" from="MarginContainer/MarginContainer/Button" to="." method="_on_xml_open_button_pressed"]

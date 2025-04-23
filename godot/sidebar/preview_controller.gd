@@ -87,3 +87,9 @@ func _on_preview_animation_changed() -> void:
 		enable.call(down)
 	else:
 		disable.call(down)
+
+func _on_preview_sprite_frames_changed() -> void:
+	self.type = AnimationType.Idle
+	%Preview.flip_h = false
+	_on_preview_animation_changed()
+	# TODO: Disable action animation if not present
