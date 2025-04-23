@@ -17,8 +17,6 @@ var texture: TextureXml :
 		action = 0
 		_update_sprite()
 
-signal avaliable_directions(directions: Array[int])
-
 func _update_sprite():
 	if !texture:
 		return

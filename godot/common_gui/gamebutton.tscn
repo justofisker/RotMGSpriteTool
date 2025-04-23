@@ -27,6 +27,7 @@ patch_margin_right = 6
 patch_margin_bottom = 11
 
 [node name="BGHover" type="NinePatchRect" parent="."]
+visible = false
 show_behind_parent = true
 layout_mode = 1
 anchors_preset = 13
