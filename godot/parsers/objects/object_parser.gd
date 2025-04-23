@@ -41,10 +41,11 @@ func parse_objects(path: String) -> Array[Character]:
 					pass
 				"Projectile":
 					pass
-				"GameObject":
-					pass
 				"Portal":
 					pass
+				"GameObject":
+					var c = Character.parse(p)
+					chars.append(c)
 				"Character":
 					var c = Character.parse(p)
 					chars.append(c)
